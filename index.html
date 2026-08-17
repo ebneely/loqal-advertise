@@ -536,6 +536,17 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   vector-effect:non-scaling-stroke;
 }
 
+/* The cord is 420px of strand meant to be cut off by the top of the band.
+   Once the offer stacks, the ticket sits at the BOTTOM of a tall section and
+   there is nothing above it to do the cutting, so the strands run straight up
+   through the questions. Kept next to the rule it disables on purpose: the
+   last time these two lived apart, the fix was lost in an edit. */
+@media(max-width:899px){
+  .cord{display:none}
+  .ticket{padding-block-start:clamp(1.5rem,6vw,2.5rem)}
+  .tag{inset-block-start:clamp(1.5rem,6vw,2.5rem)}
+}
+
 .offer h2{
   margin:0 0 1rem;font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:800;
   letter-spacing:-.03em;line-height:1.08;text-wrap:balance;max-width:16ch;
