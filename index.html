@@ -1234,9 +1234,21 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     var swingers=document.querySelectorAll('.card, .tag');
     var paper=document.querySelector('.paper');
 
-    var cur=0, prev=0;
+    var cur=0, prev=0, frames=0;
+
+    // If frames never arrive, the wrapper is pinned with no transform and the
+    // whole page is frozen -- a worse failure than having no smoothing at all.
+    // Some embeddings and background tabs throttle rAF to nothing, so prove it
+    // is running before trusting it.
+    setTimeout(function(){
+      if(frames<3){
+        document.body.classList.remove('smooth-on');
+        wrap.style.transform='';
+      }
+    },900);
 
     function raf(){
+      frames++;
       var target=window.scrollY||window.pageYOffset||0;
 
       // the lag IS the effect: content trails the scrollbar and catches up
