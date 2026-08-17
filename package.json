@@ -1,0 +1,17 @@
+{
+  "name": "loqal-join",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shop recruitment page for Loqaaal — the page a shop owner lands on after scanning the QR on a printed card.",
+  "author": "Karim-Moharm",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "qr": "node scripts/qr.mjs",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}
