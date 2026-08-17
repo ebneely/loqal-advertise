@@ -30,10 +30,20 @@ The form does not post anywhere. It opens **WhatsApp** to `01559959890` with eve
 - **Smooth scrolling is opt-in from JS.** Left on in CSS, a script error would pin the wrapper and make the whole document unscrollable.
 - **No stock photography.** Every commercially-licensed shop photo available was off-message, and one was a shuttered storefront. Replace the `.card` icons and the hang-tag block with real partner-shop photos when there are some — the cards are already shaped to take one.
 
+## Printing
+
+`print.html` is two A4 sheets, opened in a browser and printed with **background graphics on** at **100% scale** — without those two settings the stone ground drops to white and the millimetre sizes shift.
+
+- **Sheet 1** is a wall poster. Its QR is 92mm, roughly 3.2mm a module, which scans from across a shop.
+- **Sheet 2** cuts into **8 hand-out cards** along the dashed guides.
+
+Both codes point at `https://join-loqaaal.vercel.app/`, which is different from the QR *inside* the site — that one opens WhatsApp. A poster on a wall should lead to the pitch; a code in a conversation should lead to the conversation.
+
 ## Layout
 
 ```
 index.html          the entire site
+print.html          A4 wall poster + a sheet of 8 cards
 scripts/serve.mjs   dependency-free dev server
-scripts/qr.mjs      regenerates the embedded QR
+scripts/qr.mjs      regenerates the QR inside index.html
 ```
