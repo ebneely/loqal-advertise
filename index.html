@@ -536,14 +536,6 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
    section declares the world it wants and the whole document crossfades into
    it. That is why the per-section .invert band is gone -- two competing
    inversions on one screen read as a mistake rather than a change. */
-html[data-tone="bone"]{
-  --paper:#F6F4EF;--raise:#FFFFFF;--ink:#14130F;--ink-2:#5C594F;
-  --line:#DCD8CD;--field:#FFFFFF;--signal:#C8102E;
-}
-html[data-tone="clay"]{
-  --paper:#DDD6C8;--raise:#E8E2D6;--ink:#171308;--ink-2:#57503F;
-  --line:#C2B9A6;--field:#E8E2D6;--signal:#B00E27;
-}
 html[data-tone="dark"]{
   --paper:#141310;--raise:#1C1A16;--ink:#F3F1EB;--ink-2:#9C978A;
   --line:#35322B;--field:#1C1A16;--signal:#FF5468;
@@ -551,10 +543,6 @@ html[data-tone="dark"]{
 html[data-tone="deep"]{
   --paper:#2A0C11;--raise:#340F16;--ink:#FAECEE;--ink-2:#C79AA1;
   --line:#4B1B23;--field:#340F16;--signal:#FF8090;
-}
-html[data-tone="night"]{
-  --paper:#0F1319;--raise:#161B23;--ink:#E9EEF4;--ink-2:#8D97A5;
-  --line:#2A313B;--field:#161B23;--signal:#FF6A7C;
 }
 /* Only the surfaces that carry the palette transition. A blanket rule on *
    would drag every hover and focus state to the same slow curve. */
@@ -756,7 +744,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section id="what" data-tone="bone">
+  <section id="what" data-tone="light">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>إيه هو لوكال؟</span><span data-en>What is Loqal?</span>
@@ -787,7 +775,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section id="why" data-tone="deep">
+  <section id="why" data-tone="dark">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>ليه تنضم؟</span><span data-en>Why join?</span>
@@ -803,7 +791,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section id="how" data-tone="clay">
+  <section id="how" data-tone="light">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>إزاي بيشتغل؟</span><span data-en>How it works</span>
@@ -834,7 +822,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section class="offer" data-tone="night">
+  <section class="offer" data-tone="deep">
     <div class="wrap offer-grid">
       <div>
         <h2>
@@ -888,7 +876,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section id="join" data-tone="bone">
+  <section id="join" data-tone="light">
     <div class="wrap">
       <div class="form-grid">
         <div>
