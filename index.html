@@ -44,6 +44,7 @@
 .smooth{position:static}
 #spacer{display:none;pointer-events:none}
 .smooth-on .smooth{position:fixed;inset-inline:0;top:0;will-change:transform;z-index:1}
+.smooth-on header{position:fixed}
 .smooth-on #spacer{display:block}
 body{
   margin:0;
@@ -77,8 +78,15 @@ body{
 section{padding-block:clamp(4rem,10vw,9rem)}
 
 /* ---------- header ---------- */
+/* Sticky by default, fixed ONLY while the smoothed wrapper is running.
+   The wrapper is position:fixed, so the header has to be fixed too and the
+   content padded down by its height -- but that padding is applied by the
+   same script. On touch, where smoothing is deliberately off, the script
+   returns before it runs and the padding never arrived: the top of the hero
+   sat underneath the header, which is why the wordmark looked cut off.
+   Sticky needs no measuring and no script. */
 header{
-  position:fixed;inset-inline:0;top:0;z-index:50;
+  position:sticky;inset-inline:0;top:0;z-index:50;
   background:var(--paper);
   border-block-end:1px solid var(--line);
 }
@@ -665,40 +673,39 @@ section[data-tone]{
 #root[dir="ltr"] [data-ar]{display:none}
 #root[dir="ltr"] [data-en]{display:revert}
 /* On a phone there is no empty half to fill, but the catalogue is still the
-   most persuasive thing on the page -- so the shelf becomes a strip you swipe
-   instead of disappearing. Last in the sheet deliberately: it has to outrank
-   .shelf.lit .card, which sets the desktop entrance. */
-/* The cord is 420px of strand meant to be cut off by the top of the band.
-   Once the offer stacks, the ticket sits at the BOTTOM of a tall section and
-   there is nothing above it to do the cutting -- so the strands run straight
-   up through the questions. The tag keeps its punched hole and still reads as
-   a swing ticket without them. */
-@media(max-width:899px){
-  .cord{display:none}
-  .ticket{padding-block-start:clamp(1.5rem,6vw,2.5rem)}
-  .tag{inset-block-start:clamp(1.5rem,6vw,2.5rem)}
-}
+   most persuasive thing on the page -- so the shelf becomes a plain grid of
+   all six rather than a horizontal scroller. A scroller in an RTL document
+   opens at whatever scroll position the browser decides is the start, which
+   in practice meant landing mid-strip on a clipped card. A grid has no
+   scroll position to get wrong.
 
+   Last in the sheet deliberately: it has to outrank .shelf.lit .card, which
+   sets the desktop entrance. */
 @media(max-width:999px){
   .hero{display:flex;flex-direction:column;justify-content:center}
   .hero > .wrap{order:1}
   .shelf{
     order:2;
-    display:flex;position:static;inset:auto;width:auto;
-    gap:.7rem;overflow-x:auto;overscroll-behavior-x:contain;
-    margin-block-start:clamp(1.5rem,5vw,2.25rem);
-    padding-inline:var(--pad);padding-block-end:.5rem;
-    scroll-snap-type:x proximity;scrollbar-width:none;
+    display:grid;grid-template-columns:1fr 1fr;gap:.6rem;
+    position:static;inset:auto;width:auto;
+    margin-block-start:clamp(1.75rem,6vw,2.5rem);
+    padding-inline:var(--pad);
   }
-  .shelf::-webkit-scrollbar{display:none}
   .shelf .card,
   .shelf.lit .card{
-    position:static;inset:auto;flex:0 0 auto;width:13.5rem;
+    position:static;inset:auto;width:auto;
     transform:none;rotate:0deg;translate:none;
     animation:none;opacity:1;filter:none;
-    scroll-snap-align:start;
+    padding:.6rem .65rem;gap:.55rem;
+    box-shadow:0 10px 24px -18px rgba(20,19,15,.45);
   }
+  .shelf .card .ico{width:30px;height:30px}
+  .shelf .card .ico svg{width:16px;height:16px}
+  .shelf .card b{font-size:.78rem}
+  .shelf .card small{font-size:.66rem}
+  .shelf .card .price{font-size:.74rem}
 }
+
 </style>
 
 <div id="root" dir="rtl" lang="ar">
