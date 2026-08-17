@@ -519,6 +519,18 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 }
 .offer p{margin:0;color:var(--ink-2);max-width:46ch;font-size:clamp(1rem,1.4vw,1.12rem);text-wrap:pretty}
 
+/* ---------- diagnostics ----------
+   Only with ?debug=1 in the URL. Reports what the scroll engine is actually
+   doing, so a question about motion can be answered with a screenshot instead
+   of a guess. */
+#diag{
+  position:fixed;inset-block-start:auto;inset-block-end:12px;inset-inline-start:12px;
+  z-index:999;background:#14130F;color:#F2F0EA;
+  font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;
+  padding:10px 12px;white-space:pre;pointer-events:none;
+  border:1px solid #C8102E;
+}
+
 /* ---------- statement ----------
    A held line, given the room a held line needs. This replaced a canvas
    weave that rendered as grey graph paper: texture for its own sake was the
@@ -1188,6 +1200,31 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
       var tmq=window.matchMedia('(prefers-color-scheme: dark)');
       if(tmq.addEventListener) tmq.addEventListener('change',tDraw);
     }
+  }
+
+  // ---------- diagnostics ----------
+  if(/[?&]debug=1/.test(location.search)){
+    var box=document.createElement('div');
+    box.id='diag'; document.body.appendChild(box);
+    var NL=String.fromCharCode(10);
+    var f=0, last=performance.now(), fps=0;
+    (function tick(){
+      f++;
+      var now=performance.now();
+      if(now-last>=500){ fps=Math.round(f*1000/(now-last)); f=0; last=now; }
+      var w=document.getElementById('smooth');
+      var c=document.querySelector('.card');
+      box.textContent=[
+        'frames/sec   '+fps,
+        'scrollY      '+Math.round(window.scrollY),
+        'doc height   '+document.documentElement.scrollHeight,
+        'smooth-on    '+document.body.classList.contains('smooth-on'),
+        'transform    '+((w&&w.style.transform)||'(none)'),
+        'card --py    '+((c&&c.style.getPropertyValue('--py'))||'(unset)'),
+        'reduced      '+window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      ].join(NL);
+      requestAnimationFrame(tick);
+    })();
   }
 
   // ---------- scroll behaviour ----------
