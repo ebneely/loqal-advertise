@@ -531,6 +531,48 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   border:1px solid #C8102E;
 }
 
+/* ---------- tone ----------
+   The page has one palette at a time and it changes as you travel: each
+   section declares the world it wants and the whole document crossfades into
+   it. That is why the per-section .invert band is gone -- two competing
+   inversions on one screen read as a mistake rather than a change. */
+html[data-tone="bone"]{
+  --paper:#F6F4EF;--raise:#FFFFFF;--ink:#14130F;--ink-2:#5C594F;
+  --line:#DCD8CD;--field:#FFFFFF;--signal:#C8102E;
+}
+html[data-tone="clay"]{
+  --paper:#DDD6C8;--raise:#E8E2D6;--ink:#171308;--ink-2:#57503F;
+  --line:#C2B9A6;--field:#E8E2D6;--signal:#B00E27;
+}
+html[data-tone="dark"]{
+  --paper:#141310;--raise:#1C1A16;--ink:#F3F1EB;--ink-2:#9C978A;
+  --line:#35322B;--field:#1C1A16;--signal:#FF5468;
+}
+html[data-tone="deep"]{
+  --paper:#2A0C11;--raise:#340F16;--ink:#FAECEE;--ink-2:#C79AA1;
+  --line:#4B1B23;--field:#340F16;--signal:#FF8090;
+}
+html[data-tone="night"]{
+  --paper:#0F1319;--raise:#161B23;--ink:#E9EEF4;--ink-2:#8D97A5;
+  --line:#2A313B;--field:#161B23;--signal:#FF6A7C;
+}
+/* Only the surfaces that carry the palette transition. A blanket rule on *
+   would drag every hover and focus state to the same slow curve. */
+body,header,section,footer,
+.card,.card .ico,.paper,.tag,.btn,.lang button,.linkish,
+.f input,.f select,.f textarea,.qr-card{
+  transition:background-color .75s var(--ease),color .75s var(--ease),
+             border-color .75s var(--ease);
+}
+
+/* ---------- full-height sections ----------
+   One idea per screen. min-height, never height: the form and the questions
+   grow past a viewport and must not be clipped to fit a slogan's rhythm. */
+section[data-tone]{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+}
+
 /* ---------- statement ----------
    A held line, given the room a held line needs. This replaced a canvas
    weave that rendered as grey graph paper: texture for its own sake was the
@@ -615,7 +657,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 <div class="smooth" id="smooth">
 <main id="top">
 
-  <section class="hero">
+  <section class="hero" data-tone="light">
     <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="shelf" aria-hidden="true">
       <article class="card" style="--x:4%;--y:9%;--r:-4deg;--d:0s;--dur:8.5s">
@@ -704,7 +746,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     <div class="marquee-track" id="track"></div>
   </div>
 
-  <section class="statement">
+  <section class="statement" data-tone="dark">
     <canvas id="threads" aria-hidden="true"></canvas>
     <div class="wrap">
       <p>
@@ -714,7 +756,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section id="what">
+  <section id="what" data-tone="bone">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>إيه هو لوكال؟</span><span data-en>What is Loqal?</span>
@@ -745,7 +787,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section id="why" class="invert">
+  <section id="why" data-tone="deep">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>ليه تنضم؟</span><span data-en>Why join?</span>
@@ -761,7 +803,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section id="how">
+  <section id="how" data-tone="clay">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>إزاي بيشتغل؟</span><span data-en>How it works</span>
@@ -792,7 +834,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section class="offer">
+  <section class="offer" data-tone="night">
     <div class="wrap offer-grid">
       <div>
         <h2>
@@ -846,7 +888,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section id="join">
+  <section id="join" data-tone="bone">
     <div class="wrap">
       <div class="form-grid">
         <div>
@@ -932,7 +974,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     </div>
   </section>
 
-  <section id="contact" class="invert">
+  <section id="contact" data-tone="dark">
     <div class="wrap contact-grid">
       <div>
         <h2 class="eyebrow-h2">
@@ -1227,6 +1269,35 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     })();
   }
 
+  // ---------- tone changes with travel ----------
+  // Whichever section owns the middle of the screen owns the palette. Using
+  // the midpoint rather than "is visible" means the change lands when a
+  // section has actually taken over, not when its first pixel appears.
+  (function(){
+    var toned=document.querySelectorAll('section[data-tone]');
+    if(!toned.length) return;
+    var root=document.documentElement;
+
+    function pick(){
+      var mid=window.innerHeight/2, best=null, bestDist=Infinity;
+      for(var i=0;i<toned.length;i++){
+        var r=toned[i].getBoundingClientRect();
+        if(r.bottom<0 || r.top>window.innerHeight) continue;
+        var d=Math.abs((r.top+r.bottom)/2-mid);
+        if(d<bestDist){ bestDist=d; best=toned[i]; }
+      }
+      if(best){
+        var t=best.getAttribute('data-tone');
+        if(root.getAttribute('data-tone')!==t) root.setAttribute('data-tone',t);
+      }
+    }
+    pick();
+    window.addEventListener('scroll',pick,{passive:true});
+    window.addEventListener('resize',pick);
+    // the smoothed wrapper moves without firing scroll, so sample frames too
+    (function loop(){ pick(); requestAnimationFrame(loop); })();
+  })();
+
   // ---------- scroll behaviour ----------
   // The document scrolls natively; the content is eased toward that position
   // on its own transform. That keeps the scrollbar, keyboard, anchor links and
@@ -1239,7 +1310,9 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     var wrap=document.getElementById('smooth'), spacer=document.getElementById('spacer');
     if(!wrap || !spacer) return;
 
+    // ?nosmooth=1 turns the wrapper off for debugging without touching code
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(/[?&]nosmooth=1/.test(location.search)) return;
 
     var head=document.querySelector('header');
     document.body.classList.add('smooth-on');
@@ -1272,6 +1345,23 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
     var paper=document.querySelector('.paper');
 
     var cur=0, prev=0, frames=0;
+
+    // Anchor links stop working the moment the content lives inside a fixed
+    // wrapper: the browser cannot scroll to a target that never moves in the
+    // document. Every in-page link is therefore resolved by hand, against the
+    // wrapper's own offset, and the header height is subtracted so a heading
+    // does not land underneath it.
+    document.addEventListener('click',function(e){
+      var a=e.target && e.target.closest && e.target.closest('a[href^="#"]');
+      if(!a) return;
+      var id=a.getAttribute('href').slice(1);
+      if(!id) return;
+      var t=document.getElementById(id);
+      if(!t) return;
+      e.preventDefault();
+      var y=t.getBoundingClientRect().top+cur-(head?head.offsetHeight:0);
+      window.scrollTo({top:Math.max(0,y),behavior:'auto'});
+    });
 
     // If frames never arrive, the wrapper is pinned with no transform and the
     // whole page is frozen -- a worse failure than having no smoothing at all.
