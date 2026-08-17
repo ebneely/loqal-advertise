@@ -372,7 +372,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   /* Visible by default. The entrance is added by JS via .lit, so a browser
      that never runs the animation still shows a shelf of products rather
      than an empty half-page. */
-  animation:bob var(--dur,9s) ease-in-out var(--d) infinite alternate;
+  animation:bob var(--dur,4.4s) cubic-bezier(.37,0,.63,1) var(--d) infinite alternate;
 }
 /* Two animations that never fight: one owns opacity and blur, the other owns
    transform. Sharing `transform` between an entrance and a loop is what makes
@@ -381,15 +381,19 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   opacity:0;
   animation:
     cardIn .9s var(--ease) var(--d) forwards,
-    bob var(--dur,9s) ease-in-out var(--d) infinite alternate;
+    bob var(--dur,4.4s) cubic-bezier(.37,0,.63,1) var(--d) infinite alternate;
 }
 @keyframes cardIn{
   from{opacity:0;filter:blur(8px)}
   to{opacity:1;filter:blur(0)}
 }
+/* A 20px swing at eight seconds spends most of its time near the ends,
+   where ease-in-out barely moves -- which is why the shelf kept looking
+   static. Twice the travel, half the time, and an easing much closer to a
+   sine wave so it never parks at the extremes. */
 @keyframes bob{
-  from{transform:rotate(var(--r)) translate3d(0,6px,0)}
-  to{transform:rotate(var(--r)) translate3d(0,-14px,0)}
+  from{transform:rotate(var(--r)) translate3d(0,16px,0)}
+  to{transform:rotate(var(--r)) translate3d(0,-26px,0)}
 }
 @media(prefers-reduced-motion:reduce){.card{animation:none;opacity:1;filter:none}}
 
@@ -721,7 +725,7 @@ section[data-tone]{
   <section class="hero" data-tone="light">
     <div class="glow" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="shelf" aria-hidden="true">
-      <article class="card" style="--x:4%;--y:9%;--r:-4deg;--d:0s;--dur:5s">
+      <article class="card" style="--x:4%;--y:9%;--r:-4deg;--d:0s;--dur:3.2s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M7 3l-4 2 1.5 4L6 8.5V21h12V8.5l1.5.5L21 5l-4-2-2 2h-6z"/></svg></span>
         <span class="txt">
           <b><span data-ar>قميص كتان</span><span data-en>Linen shirt</span></b>
@@ -729,7 +733,7 @@ section[data-tone]{
         </span>
         <span class="price"><span data-ar>450 ج.م</span><span data-en>EGP 450</span></span>
       </article>
-      <article class="card" style="--x:40%;--y:20%;--r:3deg;--d:.14s;--dur:6.4s">
+      <article class="card" style="--x:40%;--y:20%;--r:3deg;--d:.14s;--dur:4.1s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3h6l-1 4 4 8-1 9H7l-1-9 4-8z"/><path d="M9 3l3 3 3-3"/></svg></span>
         <span class="txt">
           <b><span data-ar>تيشيرت أوفرسايز</span><span data-en>Oversized tee</span></b>
@@ -737,7 +741,7 @@ section[data-tone]{
         </span>
         <span class="price"><span data-ar>390 ج.م</span><span data-en>EGP 390</span></span>
       </article>
-      <article class="card" style="--x:8%;--y:36%;--r:2.5deg;--d:.28s;--dur:5.6s">
+      <article class="card" style="--x:8%;--y:36%;--r:2.5deg;--d:.28s;--dur:3.6s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M2 17v-5h5l3 2h7a5 5 0 0 1 5 5v1H2z"/><path d="M7 12v5"/></svg></span>
         <span class="txt">
           <b><span data-ar>هودي</span><span data-en>Hoodie</span></b>
@@ -745,7 +749,7 @@ section[data-tone]{
         </span>
         <span class="price"><span data-ar>780 ج.م</span><span data-en>EGP 780</span></span>
       </article>
-      <article class="card" style="--x:46%;--y:47%;--r:-3deg;--d:.42s;--dur:7s">
+      <article class="card" style="--x:46%;--y:47%;--r:-3deg;--d:.42s;--dur:4.6s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M4 8h16l-1 13H5z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></span>
         <span class="txt">
           <b><span data-ar>جاكيت</span><span data-en>Jacket</span></b>
@@ -753,7 +757,7 @@ section[data-tone]{
         </span>
         <span class="price"><span data-ar>650 ج.م</span><span data-en>EGP 650</span></span>
       </article>
-      <article class="card" style="--x:2%;--y:62%;--r:-2deg;--d:.56s;--dur:6s">
+      <article class="card" style="--x:2%;--y:62%;--r:-2deg;--d:.56s;--dur:3.9s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M7 3h10l-1 18h-4l-1-9-1 9H6z"/><path d="M7 8h10"/></svg></span>
         <span class="txt">
           <b><span data-ar>بنطلون جينز</span><span data-en>Denim jeans</span></b>
@@ -761,7 +765,7 @@ section[data-tone]{
         </span>
         <span class="price"><span data-ar>1,150 ج.م</span><span data-en>EGP 1,150</span></span>
       </article>
-      <article class="card" style="--x:42%;--y:73%;--r:4deg;--d:.7s;--dur:7.6s">
+      <article class="card" style="--x:42%;--y:73%;--r:4deg;--d:.7s;--dur:5s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M8 3h8l3 7-2 1v10H7V11L5 10z"/><path d="M12 4v17"/></svg></span>
         <span class="txt">
           <b><span data-ar>فستان</span><span data-en>Dress</span></b>
