@@ -1,3 +1,7 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EDEBE5">
+<meta name="description" content="لوكال — سوق أونلاين لمحلات الملابس في مصر. انضم مجانًا.">
 <title>لوكـــال — انضم</title>
 
 <style>
@@ -150,9 +154,23 @@ nav a:hover{border-block-end-color:var(--ink)}
 
 @keyframes wipe{from{clip-path:inset(105% 0 0 0)}to{clip-path:inset(-15% 0 0 0)}}
 .hero-word{animation:wipe 1.05s var(--ease) both}
-/* the wordmark stretches when you touch it -- the same joke the name is */
-.stretch{cursor:ew-resize;-webkit-user-select:none;user-select:none}
+/* Both faces are variable, so the wordmark can lose weight under the cursor
+   the way cloth relaxes when you stop pulling it: 800 down to 380, and the
+   letters open up as the strokes thin. No text is rewritten, so Arabic
+   shaping is never at risk -- which is what ruled out the earlier version. */
+.stretch{
+  font-variation-settings:'wght' 800;
+  transition:font-variation-settings .55s var(--ease),
+             letter-spacing .55s var(--ease),
+             opacity .55s var(--ease);
+  -webkit-user-select:none;user-select:none;
+}
+.stretch:hover,.stretch:focus-visible{
+  font-variation-settings:'wght' 380;
+  letter-spacing:.005em;
+}
 .stretch:focus-visible{outline:2px solid var(--signal);outline-offset:.15em}
+@media(prefers-reduced-motion:reduce){.stretch{transition:none}}
 @media(prefers-reduced-motion:reduce){.hero-word{animation:none;clip-path:none}}
 
 .hero-word{
@@ -347,217 +365,6 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 }
 @media(min-width:1000px){.shelf{display:block}}
 
-.card{
-  translate:0 var(--py,0px);
-  rotate:var(--tilt,0deg);
-  position:absolute;
-  inset-inline-start:var(--x);inset-block-start:var(--y);
-  width:clamp(190px,17vw,236px);
-  display:flex;align-items:center;gap:.75rem;
-  padding:.7rem .8rem;
-  background:var(--raise);
-  border:1px solid var(--line);
-  box-shadow:0 22px 44px -30px rgba(20,19,15,.5),0 2px 6px -4px rgba(20,19,15,.25);
-  transform:rotate(var(--r));
-  /* Visible by default. The entrance is added by JS via .lit, so a browser
-     that never runs the animation still shows a shelf of products rather
-     than an empty half-page. */
-  animation:bob var(--dur,9s) ease-in-out var(--d) infinite alternate;
-}
-/* Two animations that never fight: one owns opacity and blur, the other owns
-   transform. Sharing `transform` between an entrance and a loop is what makes
-   card animations jump. */
-.shelf.lit .card{
-  opacity:0;
-  animation:
-    cardIn .9s var(--ease) var(--d) forwards,
-    bob var(--dur,9s) ease-in-out var(--d) infinite alternate;
-}
-@keyframes cardIn{
-  from{opacity:0;filter:blur(8px)}
-  to{opacity:1;filter:blur(0)}
-}
-@keyframes bob{
-  from{transform:rotate(var(--r)) translate3d(0,6px,0)}
-  to{transform:rotate(var(--r)) translate3d(0,-14px,0)}
-}
-@media(prefers-reduced-motion:reduce){.card{animation:none;opacity:1;filter:none}}
-
-.card .ico{
-  flex:none;width:38px;height:38px;
-  background:var(--paper);border:1px solid var(--line);
-  display:grid;place-items:center;
-}
-.card .ico svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.4}
-.card .txt{display:grid;gap:.1rem;min-width:0}
-.card b{font-size:.86rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.card small{font-size:.72rem;color:var(--ink-2);font-weight:600}
-.card .price{
-  margin-inline-start:auto;font-size:.82rem;font-weight:800;
-  white-space:nowrap;font-variant-numeric:tabular-nums;
-}
-
-/* ---------- the offer ----------
-   A swing tag over a stack of the same word, the way a shop prints one
-   message down a whole label. The repetition is the point: it reads as a
-   price ticket, not as a banner. */
-.offer{
-  position:relative;
-  overflow:hidden;   /* trims the cord at the band's top edge */
-  background:var(--raise);
-  border-block:1px solid var(--line);
-  padding-block:clamp(3.5rem,9vw,7rem);
-  overflow:hidden;
-}
-.offer-grid{display:grid;gap:clamp(2rem,5vw,4rem);align-items:center}
-@media(min-width:900px){.offer-grid{grid-template-columns:minmax(0,1fr) minmax(360px,1fr)}}
-
-/* ---------- questions ----------
-   The objections a shop owner actually raises, answered where they are
-   raised. Native <details>, so it opens without JS and reads to a screen
-   reader as the disclosure it is. */
-.faq{margin-block-start:clamp(1.5rem,3vw,2.25rem);display:grid}
-.faq details{
-  border-block-start:1px solid var(--line);
-}
-.faq details:last-of-type{border-block-end:1px solid var(--line)}
-.faq summary{
-  list-style:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:space-between;gap:1rem;
-  padding-block:clamp(.9rem,2vw,1.15rem);
-  font-size:clamp(1rem,1.5vw,1.15rem);font-weight:700;
-  transition:color .2s var(--ease);
-}
-.faq summary::-webkit-details-marker{display:none}
-.faq summary:hover{color:var(--signal)}
-.faq summary .chev{
-  flex:none;width:11px;height:11px;border-right:2px solid currentColor;
-  border-bottom:2px solid currentColor;transform:rotate(45deg);
-  transition:transform .3s var(--ease);margin-block-end:4px;
-}
-.faq details[open] summary .chev{transform:rotate(-135deg);margin-block-end:-2px}
-.faq p{
-  margin:0;padding-block-end:clamp(1rem,2vw,1.4rem);
-  color:var(--ink-2);max-width:52ch;line-height:1.65;
-}
-
-/* ---------- the hang tag ----------
-   A printed card with the offer repeated down it, and a large tag swung
-   across it on a cord. Modelled on a real swing ticket: the tag is the
-   loud object, the card behind it is the fine print. */
-.ticket{
-  --tagw:clamp(76px,7vw,106px);
-  --cordw:clamp(58px,5vw,80px);
-  --tagx:52%;
-  position:relative;justify-self:center;width:100%;max-width:420px;
-  padding-block:clamp(5rem,10vw,8rem) 1.5rem;   /* headroom for the cord */
-}
-.paper{
-  translate:0 var(--py,0px);
-  background:#FFFFFF;
-  color:#14130F;              /* ink on stock, never the page's ink */
-  border:1px solid var(--line);
-  padding:clamp(1.1rem,2.4vw,2rem) clamp(1.4rem,3vw,2.6rem);
-  box-shadow:0 30px 60px -44px rgba(20,19,15,.6);
-}
-.ticket .stack{
-  display:grid;gap:0;
-  font-weight:800;line-height:.9;letter-spacing:-.04em;
-  font-size:clamp(2.2rem,6.5vw,4.4rem);
-}
-.ticket .stack b{font-weight:inherit}
-.ticket .stack span{display:block;animation:tick 4s var(--ease) infinite alternate}
-.ticket .stack span:nth-child(2){animation-delay:.15s}
-.ticket .stack span:nth-child(3){animation-delay:.3s}
-.ticket .stack span:nth-child(4){animation-delay:.45s}
-.ticket .stack span:nth-child(5){animation-delay:.6s}
-@keyframes tick{from{opacity:.3}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){.ticket .stack span{animation:none;opacity:1}}
-
-.tag{
-  rotate:var(--tilt,0deg);
-  position:absolute;z-index:3;
-  inset-block-start:clamp(3.6rem,7.5vw,6rem);
-  inset-inline-start:var(--tagx);
-  width:var(--tagw);
-  height:clamp(230px,32vw,420px);
-  background:#14130F;color:#F5F3EE;   /* a black tag on any ground */
-  transform:rotate(21deg);transform-origin:top center;
-  display:grid;place-items:center;
-  box-shadow:0 34px 60px -34px rgba(20,19,15,.75);
-  animation:swing 6s ease-in-out infinite alternate;
-}
-.tag span{
-  writing-mode:vertical-rl;transform:rotate(180deg);
-  font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.06em;
-  font-size:clamp(1.5rem,2.7vw,2.3rem);
-}
-/* the punched hole the cord threads through */
-.tag::after{
-  content:"";position:absolute;inset-block-start:14px;inset-inline-start:50%;
-  width:11px;height:11px;border-radius:50%;
-  background:#F5F3EE;transform:translateX(-50%);
-}
-@keyframes swing{from{transform:rotate(18deg)}to{transform:rotate(24deg)}}
-@media(prefers-reduced-motion:reduce){.tag{animation:none}}
-
-/* The cord is a CHILD of the tag, so the two can never drift apart: no
-   arithmetic lines them up, the DOM does. It rotates with the tag, which is
-   what a real cord does, and .offer's overflow trims it at the band's edge. */
-.cord{
-  position:absolute;z-index:-1;
-  inset-block-end:calc(100% - 22px);
-  inset-inline-start:50%;
-  width:40px;height:420px;
-  transform:translateX(-50%);
-  fill:none;stroke:#14130F;stroke-width:2.5;stroke-linecap:round;
-  vector-effect:non-scaling-stroke;
-}
-
-.offer h2{
-  margin:0 0 1rem;font-size:clamp(1.8rem,4.5vw,3.2rem);font-weight:800;
-  letter-spacing:-.03em;line-height:1.08;text-wrap:balance;max-width:16ch;
-}
-.offer p{margin:0;color:var(--ink-2);max-width:46ch;font-size:clamp(1rem,1.4vw,1.12rem);text-wrap:pretty}
-
-/* ---------- diagnostics ----------
-   Only with ?debug=1 in the URL. Reports what the scroll engine is actually
-   doing, so a question about motion can be answered with a screenshot instead
-   of a guess. */
-#diag{
-  position:fixed;inset-block-start:auto;inset-block-end:12px;inset-inline-start:12px;
-  z-index:999;background:#14130F;color:#F2F0EA;
-  font:12px/1.5 ui-monospace,Menlo,Consolas,monospace;
-  padding:10px 12px;white-space:pre;pointer-events:none;
-  border:1px solid #C8102E;
-}
-
-/* ---------- tone ----------
-   The page has one palette at a time and it changes as you travel: each
-   section declares the world it wants and the whole document crossfades into
-   it. That is why the per-section .invert band is gone -- two competing
-   inversions on one screen read as a mistake rather than a change. */
-html[data-tone="dark"]{
-  --paper:#141310;--raise:#1C1A16;--ink:#F3F1EB;--ink-2:#9C978A;
-  --line:#35322B;--field:#1C1A16;--signal:#FF5468;
-}
-/* Only the surfaces that carry the palette transition. A blanket rule on *
-   would drag every hover and focus state to the same slow curve. */
-body,header,section,footer,
-.card,.card .ico,.paper,.tag,.btn,.lang button,.linkish,
-.f input,.f select,.f textarea,.qr-card{
-  transition:background-color .75s var(--ease),color .75s var(--ease),
-             border-color .75s var(--ease);
-}
-
-/* ---------- full-height sections ----------
-   One idea per screen. min-height, never height: the form and the questions
-   grow past a viewport and must not be clipped to fit a slogan's rhythm. */
-section[data-tone]{
-  min-height:100svh;
-  display:flex;flex-direction:column;justify-content:center;
-}
-
 /* ---------- statement ----------
    A held line, given the room a held line needs. This replaced a canvas
    weave that rendered as grey graph paper: texture for its own sake was the
@@ -605,6 +412,48 @@ section[data-tone]{
 .revealed{opacity:1;transform:none;filter:blur(0);
   transition:opacity .85s var(--ease),transform .85s var(--ease),filter .85s var(--ease)}
 
+
+/* ---------- phones ----------
+   Most of the people this page is for will only ever see it on a phone, so
+   these are corrections to the real target, not a fallback for it. */
+@media (max-width:760px){
+  .hero{min-height:auto;padding-block:clamp(1.5rem,6vw,2.5rem) clamp(1.75rem,6vw,2.5rem)}
+  .hero-word{font-size:clamp(3.6rem,22vw,7rem);margin-block-end:1.25rem}
+  .hero-lead{font-size:clamp(1.35rem,7vw,2rem);max-width:none}
+  .hero-sub{font-size:1.02rem;max-width:none}
+  .meta{gap:.9rem 1.5rem;margin-block-start:clamp(1.5rem,5vw,2rem)}
+  .meta div{min-width:calc(50% - 1.5rem)}
+
+  /* one screen per idea is a desktop luxury; on a phone it strands
+     half-empty sections between the parts people actually read */
+  section[data-tone]{min-height:auto}
+  section{padding-block:clamp(2.5rem,9vw,3.5rem)}
+
+  .eyebrow-h2{font-size:clamp(1.9rem,9vw,2.6rem);max-width:none}
+  .stmt-row h3{font-size:clamp(1.35rem,6.5vw,1.8rem)}
+  .statement p{font-size:clamp(1.6rem,8vw,2.4rem);max-width:none}
+  .step::before{font-size:1.5rem}
+  .bene li{font-size:1.05rem}
+
+  .ticket{max-width:320px}
+  .tag{height:clamp(190px,52vw,260px);width:clamp(62px,17vw,84px)}
+  .ticket .stack{font-size:clamp(1.9rem,10vw,2.8rem)}
+
+  .tel{font-size:clamp(2rem,11vw,3rem)}
+  .btn{width:100%;justify-content:space-between}
+  .send{flex-direction:column;align-items:stretch;gap:.9rem}
+  .linkish{align-self:flex-start}
+  .foot{flex-direction:column;align-items:flex-start;gap:.5rem}
+}
+
+/* Fingers, not cursors: the tap targets that matter are the toggle, the
+   questions and the send button. */
+@media (pointer:coarse){
+  .lang button{padding:.6rem .9rem}
+  .faq summary{padding-block:1.15rem}
+  .stretch{cursor:default}
+}
+
 /* ---------- load motion ---------- */
 @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
 .rise{animation:rise .9s var(--ease) both}
@@ -619,6 +468,30 @@ section[data-tone]{
 [data-en]{display:none}
 #root[dir="ltr"] [data-ar]{display:none}
 #root[dir="ltr"] [data-en]{display:revert}
+/* On a phone there is no empty half to fill, but the catalogue is still the
+   most persuasive thing on the page -- so the shelf becomes a strip you swipe
+   instead of disappearing. Placed last in the sheet deliberately: it has to
+   outrank .shelf.lit .card, which sets the desktop entrance. */
+@media(max-width:999px){
+  .hero{display:flex;flex-direction:column;justify-content:center}
+  .hero > .wrap{order:1}
+  .shelf{
+    order:2;
+    display:flex;position:static;inset:auto;width:auto;
+    gap:.7rem;overflow-x:auto;overscroll-behavior-x:contain;
+    margin-block-start:clamp(1.5rem,5vw,2.25rem);
+    padding-inline:var(--pad);padding-block-end:.5rem;
+    scroll-snap-type:x proximity;scrollbar-width:none;
+  }
+  .shelf::-webkit-scrollbar{display:none}
+  .shelf .card,
+  .shelf.lit .card{
+    position:static;inset:auto;flex:0 0 auto;width:13.5rem;
+    transform:none;rotate:0deg;translate:none;
+    animation:none;opacity:1;filter:none;
+    scroll-snap-align:start;
+  }
+}
 </style>
 
 <div id="root" dir="rtl" lang="ar">
@@ -695,8 +568,8 @@ section[data-tone]{
       </article>
     </div>
     <div class="wrap">
-      <h1 class="hero-word rise stretch" data-ar tabindex="0" data-base="لوك" data-tail="ال" data-min="3" data-max="14">لوكـــال</h1>
-      <h1 class="hero-word rise stretch" data-en tabindex="0" data-base="LOQ" data-tail="L" data-min="3" data-max="12">LOQAAAL</h1>
+      <h1 class="hero-word rise stretch" data-ar>لوكـــال</h1>
+      <h1 class="hero-word rise stretch" data-en>LOQAAAL</h1>
       <div class="hero-grid">
         <p class="hero-lead rise d1">
           <span data-ar>سوق أونلاين لمحلات الملابس في مصر.</span>
@@ -1298,6 +1171,10 @@ section[data-tone]{
     // ?nosmooth=1 turns the wrapper off for debugging without touching code
     if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     if(/[?&]nosmooth=1/.test(location.search)) return;
+    // Touch devices keep their native momentum scrolling. Easing the content
+    // on a transform fights the platform's own physics and repaints the whole
+    // page every frame, which is exactly the wrong trade on a mid-range phone.
+    if(window.matchMedia('(pointer:coarse)').matches) return;
 
     var head=document.querySelector('header');
     document.body.classList.add('smooth-on');
@@ -1386,58 +1263,6 @@ section[data-tone]{
     }
     requestAnimationFrame(raf);
   })();
-
-  // ---------- the wordmark stretches ----------
-  // The name is a word held longer than it needs to be, so touching it holds
-  // it longer still. Arabic does this with the kashida (U+0640); Latin does
-  // it by repeating the vowel.
-  //
-  // The character count is animated rather than the geometry. Splitting the
-  // word into spans to scale one of them would break Arabic shaping -- the
-  // letters either side of the kashida stop joining -- so every frame is a
-  // whole, correctly-shaped word.
-  document.querySelectorAll('.stretch').forEach(function(el){
-    var base=el.getAttribute('data-base'),
-        tail=el.getAttribute('data-tail'),
-        min=+el.getAttribute('data-min'),
-        max=+el.getAttribute('data-max'),
-        fill=el.hasAttribute('data-en')?'A':'ـ';
-    var cur=min, target=min, raf=0;
-    var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // the stretch has to fit the screen it is on: a wordmark set in vw units
-    // runs off a narrow viewport long before it reaches the desktop maximum
-    function ceiling(){
-      return Math.max(min+2, Math.min(max, Math.floor(window.innerWidth/135)+min));
-    }
-    var cap=ceiling();
-    window.addEventListener('resize',function(){
-      cap=ceiling();
-      if(target>cap) to(cap);
-    });
-
-    function paint(n){ el.textContent=base+fill.repeat(Math.round(n))+tail; }
-
-    function run(){
-      // ease toward the target so it pulls rather than snaps
-      cur+=(target-cur)*0.18;
-      if(Math.abs(target-cur)<0.04){ cur=target; paint(cur); raf=0; return; }
-      paint(cur);
-      raf=requestAnimationFrame(run);
-    }
-    function to(n){
-      target=n;
-      if(reduced){ cur=n; paint(n); return; }
-      if(!raf) raf=requestAnimationFrame(run);
-    }
-
-    el.addEventListener('mouseenter',function(){to(cap)});
-    el.addEventListener('mouseleave',function(){to(min)});
-    el.addEventListener('focus',function(){to(cap)});
-    el.addEventListener('blur',function(){to(min)});
-    // touch has no hover: tap holds the stretch, tap again releases it
-    el.addEventListener('click',function(){to(target>min?min:cap)});
-  });
 
   // ---------- marquee ----------
   // Shop categories, not slogans: a shopkeeper scanning the page should see
