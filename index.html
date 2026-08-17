@@ -455,6 +455,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 .paper{
   translate:0 var(--py,0px);
   background:#FFFFFF;
+  color:#14130F;              /* ink on stock, never the page's ink */
   border:1px solid var(--line);
   padding:clamp(1.1rem,2.4vw,2rem) clamp(1.4rem,3vw,2.6rem);
   box-shadow:0 30px 60px -44px rgba(20,19,15,.6);
@@ -480,7 +481,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   inset-inline-start:var(--tagx);
   width:var(--tagw);
   height:clamp(230px,32vw,420px);
-  background:var(--ink);color:var(--paper);
+  background:#14130F;color:#F5F3EE;   /* a black tag on any ground */
   transform:rotate(21deg);transform-origin:top center;
   display:grid;place-items:center;
   box-shadow:0 34px 60px -34px rgba(20,19,15,.75);
@@ -495,7 +496,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 .tag::after{
   content:"";position:absolute;inset-block-start:14px;inset-inline-start:50%;
   width:11px;height:11px;border-radius:50%;
-  background:var(--paper);transform:translateX(-50%);
+  background:#F5F3EE;transform:translateX(-50%);
 }
 @keyframes swing{from{transform:rotate(18deg)}to{transform:rotate(24deg)}}
 @media(prefers-reduced-motion:reduce){.tag{animation:none}}
@@ -509,7 +510,7 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   inset-inline-start:50%;
   width:40px;height:420px;
   transform:translateX(-50%);
-  fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;
+  fill:none;stroke:#14130F;stroke-width:2.5;stroke-linecap:round;
   vector-effect:non-scaling-stroke;
 }
 
@@ -539,10 +540,6 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 html[data-tone="dark"]{
   --paper:#141310;--raise:#1C1A16;--ink:#F3F1EB;--ink-2:#9C978A;
   --line:#35322B;--field:#1C1A16;--signal:#FF5468;
-}
-html[data-tone="deep"]{
-  --paper:#2A0C11;--raise:#340F16;--ink:#FAECEE;--ink-2:#C79AA1;
-  --line:#4B1B23;--field:#340F16;--signal:#FF8090;
 }
 /* Only the surfaces that carry the palette transition. A blanket rule on *
    would drag every hover and focus state to the same slow curve. */
@@ -775,7 +772,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section id="why" data-tone="dark">
+  <section id="why" data-tone="light">
     <div class="wrap">
       <h2 class="eyebrow-h2">
         <span data-ar>ليه تنضم؟</span><span data-en>Why join?</span>
@@ -822,7 +819,7 @@ section[data-tone]{
     </div>
   </section>
 
-  <section class="offer" data-tone="deep">
+  <section class="offer" id="offer" data-tone="dark">
     <div class="wrap offer-grid">
       <div>
         <h2>
