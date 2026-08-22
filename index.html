@@ -1632,18 +1632,22 @@ section[data-tone]{
 
   var reels=[].slice.call(document.querySelectorAll('.shelf .reel'));
   if(reels.length && !reduced){
-    // Three and a third seconds of spin, then three of standing still. The
-    // spin is two moves, not one: a real reel does not ease from a standstill,
-    // it is already at speed and brakes at the end. So the bulk of it runs
-    // dead linear and the last stretch decelerates onto the landing name. A
-    // single eased transition over the whole duration crawls at both ends and
-    // reads as a list being scrolled rather than a wheel being spun.
-    var FAST=2400, SETTLE=900, HOLD=3000;
+    // Three seconds of spin, then three of standing still. The spin is two
+    // moves, not one: a real reel does not ease from a standstill, it is
+    // already at speed and brakes at the end. So the bulk of it runs dead
+    // linear and the last stretch decelerates onto the landing name. A single
+    // eased transition over the whole duration crawls at both ends and reads
+    // as a list being scrolled rather than a wheel being spun.
+    //
+    // FAST + the 30ms handoff + SETTLE is the three seconds, which is why
+    // FAST is not a round number: the handoff has to come out of the budget
+    // rather than be added on top of it.
+    var FAST=2170, SETTLE=800, HOLD=3000;
     // Rows travelled in each move. FAST_ROWS over FAST ms sets the speed --
     // thirty rows a second, fast enough to blur, slow enough that a name is
     // still occasionally legible on the way past, which is what sells it as
     // real names rather than a texture.
-    var FAST_ROWS=72, SETTLE_ROWS=18;
+    var FAST_ROWS=65, SETTLE_ROWS=16;
 
     // The brake has to open at exactly the speed the linear move ends at, or
     // the reel lurches faster at the moment it is meant to start slowing. A
