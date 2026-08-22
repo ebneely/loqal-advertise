@@ -100,6 +100,24 @@ header{
   letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink);
   line-height:1;
 }
+/* The wordmark is the one element on the page that can afford to move for no
+   reason, so it does: hover pulls the three A's apart and lets them recoil
+   past the mark before settling. Letter-spacing rather than a transform --
+   the letters have to stay letters on the baseline, and .bar is flex with the
+   nav pinned to the far edge, so the mark widens into empty space and nothing
+   beside it shifts. The bezier overshoots on purpose; a linear pull reads as a
+   layout bug rather than a spring. Touch has no hover, so :active carries the
+   same gesture on the phone this page is mostly read on. */
+.mark .aaa{
+  display:inline-block;letter-spacing:.1em;
+  transition:letter-spacing .5s cubic-bezier(.34,1.56,.64,1);
+}
+.mark:hover .aaa,.mark:focus-visible .aaa,.mark:active .aaa{letter-spacing:.34em}
+/* Below the nav breakpoint the bar is only the mark and the language toggle,
+   so the pull is shortened to keep the two off each other. */
+@media(min-width:900px){.mark:hover .aaa,.mark:focus-visible .aaa,.mark:active .aaa{letter-spacing:.5em}}
+@media(prefers-reduced-motion:reduce){.mark .aaa{transition:none}}
+
 nav{display:flex;gap:clamp(1rem,2.5vw,2.25rem);align-items:center}
 nav a{
   color:var(--ink);text-decoration:none;font-size:.86rem;font-weight:600;
@@ -749,7 +767,7 @@ section[data-tone]{
 
 <header>
   <div class="wrap bar">
-    <a class="mark" href="#top">LOQAAAL</a>
+    <a class="mark" href="#top">LOQ<span class="aaa">AAA</span>L</a>
     <nav class="nav-links">
       <a href="#what"><span data-ar>عن لوكال</span><span data-en>About</span></a>
       <a href="#why"><span data-ar>ليه تنضم</span><span data-en>Why join</span></a>
@@ -838,10 +856,6 @@ section[data-tone]{
       </div>
 
       <dl class="meta">
-        <div>
-          <dt data-ar>الموقع</dt><dt data-en>Based in</dt>
-          <dd><span data-ar>القاهرة، مصر</span><span data-en>Cairo, Egypt</span></dd>
-        </div>
         <div>
           <dt data-ar>للتواصل</dt><dt data-en>Direct line</dt>
           <dd class="ltr"><a href="tel:+201559959890" style="color:inherit;text-decoration:none">0155 995 9890</a></dd>
