@@ -102,21 +102,25 @@ header{
 }
 /* The wordmark is the one element on the page that can afford to move for no
    reason, so it does: hover pulls the three A's apart and lets them recoil
-   past the mark before settling. Letter-spacing rather than a transform --
-   the letters have to stay letters on the baseline, and .bar is flex with the
-   nav pinned to the far edge, so the mark widens into empty space and nothing
-   beside it shifts. The bezier overshoots on purpose; a linear pull reads as a
-   layout bug rather than a spring. Touch has no hover, so :active carries the
-   same gesture on the phone this page is mostly read on. */
-.mark .aaa{
-  display:inline-block;letter-spacing:.1em;
+   past the settled position. Letter-spacing rather than a transform -- the
+   letters have to stay letters on the baseline -- and the pull is written once
+   here for both places the wordmark appears, the header mark and the hero.
+   The bezier overshoots on purpose; a linear pull reads as a layout bug rather
+   than a spring. Touch has no hover, so :active carries the same gesture on
+   the phone this page is mostly read on.
+
+   letter-spacing:inherit, not a number: the header mark sits at .1em and the
+   hero at -.045em, and the span has to start from whichever it is inside. */
+.aaa{
+  display:inline-block;letter-spacing:inherit;
   transition:letter-spacing .5s cubic-bezier(.34,1.56,.64,1);
 }
+@media(prefers-reduced-motion:reduce){.aaa{transition:none}}
+
 .mark:hover .aaa,.mark:focus-visible .aaa,.mark:active .aaa{letter-spacing:.34em}
 /* Below the nav breakpoint the bar is only the mark and the language toggle,
    so the pull is shortened to keep the two off each other. */
 @media(min-width:900px){.mark:hover .aaa,.mark:focus-visible .aaa,.mark:active .aaa{letter-spacing:.5em}}
-@media(prefers-reduced-motion:reduce){.mark .aaa{transition:none}}
 
 nav{display:flex;gap:clamp(1rem,2.5vw,2.25rem);align-items:center}
 nav a{
@@ -199,6 +203,12 @@ nav a:hover{border-block-end-color:var(--ink)}
   letter-spacing:-.045em;
   margin:0 0 clamp(1.75rem,4vw,3rem);
 }
+/* The same pull as the header mark, shorter. The hero word runs to 7.5rem, so
+   an em of spacing here is worth six times what it is worth in the bar, and
+   .hero clips its overflow -- a wordmark trimmed by the section edge is worse
+   than a smaller gesture. It grows into the empty side of the column; the
+   product cards are on their own layer and never move. */
+.hero-word:hover .aaa,.hero-word:active .aaa{letter-spacing:.16em}
 
 
 /* One composed column instead of two blocks with a hole between them. */
@@ -837,7 +847,7 @@ section[data-tone]{
       </article>
     </div>
     <div class="wrap">
-      <h1 class="hero-word rise">LOQAAAL</h1>
+      <h1 class="hero-word rise">LOQ<span class="aaa">AAA</span>L</h1>
       <div class="hero-grid">
         <p class="hero-lead rise d1">
           <span data-ar>زي طلبات، بس لمحلات الهدوم.</span>
