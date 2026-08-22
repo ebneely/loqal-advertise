@@ -230,6 +230,25 @@ nav a:hover{border-block-end-color:var(--ink)}
   line-height:1.02;margin:0 0 clamp(2rem,5vw,3.5rem);text-wrap:balance;max-width:16ch;
 }
 
+/* ---------- the shape, said against the one they already know ----------
+   The comparison earns its keep only if the break is louder than the echo, so
+   the Talabat half is set quiet and the Loqal half carries the weight. No
+   strikethrough on the quiet half: this is a different shape, not a worse
+   competitor, and a struck-out line reads as a swipe. */
+.versus{list-style:none;margin:0;padding:0;display:grid;gap:0;border-block-start:1px solid var(--line)}
+.versus li{padding-block:clamp(1.5rem,3.4vw,2.4rem);border-block-end:1px solid var(--line)}
+.vs-line{
+  margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:.15em .5em;
+  font-size:clamp(1.35rem,3.4vw,2.4rem);letter-spacing:-.02em;line-height:1.15;text-wrap:balance;
+}
+.vs-line .them{color:var(--ink-2);font-weight:600}
+.vs-line .us{color:var(--ink);font-weight:800}
+.vs-line .us::before{content:"4";color:var(--signal);margin-inline-end:.35em}
+.vs-note{
+  margin:.7rem 0 0;color:var(--ink-2);max-width:54ch;
+  font-size:clamp(1rem,1.4vw,1.12rem);text-wrap:pretty;
+}
+
 /* ---------- benefits ---------- */
 .bene{display:grid;gap:0;border-block-start:1px solid var(--line)}
 @media(min-width:760px){.bene{grid-template-columns:1fr 1fr}}
@@ -796,13 +815,13 @@ section[data-tone]{
       <h1 class="hero-word rise">LOQAAAL</h1>
       <div class="hero-grid">
         <p class="hero-lead rise d1">
-          <span data-ar>سوق أونلاين لمحلات الملابس في مصر.</span>
-          <span data-en>An online marketplace for Egypt's clothing shops.</span>
+          <span data-ar>زي طلبات، بس لمحلات الهدوم.</span>
+          <span data-en>Like Talabat, but for clothing shops.</span>
         </p>
         <div class="rise d2">
           <p class="hero-sub">
-            <span data-ar>محلك يفضل محلك. إحنا بنجيبلك عملاء من برّه منطقتك، والفلوس الكاش بتوصلك إنت مباشرة.</span>
-            <span data-en>Your shop stays yours. We bring you customers from outside your area, and cash orders settle straight to you.</span>
+            <span data-ar>طلبات مبيطبخش، وإحنا مبنبيعش. محلك يفضل محلك، والكاش بيوصلك إنت.</span>
+            <span data-en>Talabat doesn't cook. We don't sell. Your shop stays yours, and cash reaches you directly.</span>
           </p>
           <a class="btn" href="#join">
             <span data-ar>انضم لوكال</span><span data-en>Apply to join</span>
@@ -835,6 +854,47 @@ section[data-tone]{
         <span data-ar>خيط واحد من كل محل. ده اللي بيعمل السوق.</span>
         <span data-en>One thread from every shop. That is what makes the market.</span>
       </p>
+    </div>
+  </section>
+
+  <section id="shape" data-tone="light">
+    <div class="wrap">
+      <h2 class="eyebrow-h2">
+        <span data-ar>زي طلبات، بس لمحلات الهدوم</span>
+        <span data-en>Like Talabat, but for clothing shops</span>
+      </h2>
+      <ul class="versus">
+        <li>
+          <p class="vs-line">
+            <span class="them"><span data-ar>طلبات مبيطبخش</span><span data-en>Talabat doesn't cook</span></span>
+            <span class="us"><span data-ar>وإحنا مبنبيعش</span><span data-en>we don't sell</span></span>
+          </p>
+          <p class="vs-note">
+            <span data-ar>البضاعة بضاعتك والسعر سعرك. مفيش مخزن ومحدش بيشتري منك — إحنا بنعرض اللي عندك في المحل أصلاً.</span>
+            <span data-en>The stock is yours and the price is yours. No warehouse and nobody buys from you — we list what is already on your shelf.</span>
+          </p>
+        </li>
+        <li>
+          <p class="vs-line">
+            <span class="them"><span data-ar>طلبات بيمسك الفلوس</span><span data-en>Talabat holds the money</span></span>
+            <span class="us"><span data-ar>وإحنا لأ</span><span data-en>we don't</span></span>
+          </p>
+          <p class="vs-note">
+            <span data-ar>الكاش والمحفظة بيوصلوك إنت وقت التسليم. الفيزا بس هي اللي بتعدّي علينا الأول، لأن مفيش طريقة تانية.</span>
+            <span data-en>Cash and wallet transfers reach you directly on delivery. Only card payments pass through us first, because there is no other way for a card to settle.</span>
+          </p>
+        </li>
+        <li>
+          <p class="vs-line">
+            <span class="them"><span data-ar>طلبات بيجيبلك ناس الحي</span><span data-en>Talabat brings you the neighbourhood</span></span>
+            <span class="us"><span data-ar>وإحنا المدينة</span><span data-en>we bring you the city</span></span>
+          </p>
+          <p class="vs-note">
+            <span data-ar>عملاء من برّه منطقتك، من غير ما تفتح فرع تاني ومن غير ما البضاعة تتحرك من محلك.</span>
+            <span data-en>Customers from outside your area, without opening a second branch and without your stock ever leaving the shop.</span>
+          </p>
+        </li>
+      </ul>
     </div>
   </section>
 
