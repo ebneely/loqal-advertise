@@ -1632,18 +1632,27 @@ section[data-tone]{
 
   var reels=[].slice.call(document.querySelectorAll('.shelf .reel'));
   if(reels.length && !reduced){
-    // Four seconds of spin, then three of standing still. The spin is two
-    // moves, not one: a real reel does not ease from a standstill, it is
-    // already at speed and brakes at the end. So three seconds run dead linear
-    // and the last one decelerates onto the landing name. A single eased
-    // transition over four seconds crawls at both ends and reads as a list
-    // scrolling rather than a wheel spinning.
-    var FAST=3000, SETTLE=1000, HOLD=3000;
+    // Three and a third seconds of spin, then three of standing still. The
+    // spin is two moves, not one: a real reel does not ease from a standstill,
+    // it is already at speed and brakes at the end. So the bulk of it runs
+    // dead linear and the last stretch decelerates onto the landing name. A
+    // single eased transition over the whole duration crawls at both ends and
+    // reads as a list being scrolled rather than a wheel being spun.
+    var FAST=2400, SETTLE=900, HOLD=3000;
     // Rows travelled in each move. FAST_ROWS over FAST ms sets the speed --
     // thirty rows a second, fast enough to blur, slow enough that a name is
     // still occasionally legible on the way past, which is what sells it as
     // real names rather than a texture.
-    var FAST_ROWS=90, SETTLE_ROWS=20;
+    var FAST_ROWS=72, SETTLE_ROWS=18;
+
+    // The brake has to open at exactly the speed the linear move ends at, or
+    // the reel lurches faster at the moment it is meant to start slowing. A
+    // cubic-bezier's opening slope is y1/x1, so y1 is derived from the two
+    // speeds rather than typed in -- change any of the four numbers above and
+    // the curve follows instead of quietly going out of step. y2 just past 1
+    // carries the tape a fraction of a row beyond the stop and back.
+    var OPEN = (FAST_ROWS/(FAST/1000)) / (SETTLE_ROWS/(SETTLE/1000));
+    var BRAKE = 'cubic-bezier(.4,'+(OPEN*0.4).toFixed(3)+',.7,1.03)';
 
     // What each reel is showing right now, so no two cards can land on the
     // same shop -- two identical names on one shelf reads as a bug.
@@ -1693,19 +1702,11 @@ section[data-tone]{
       tape.style.transition='transform '+FAST+'ms linear';
       tape.style.transform='translateY(-'+(FAST_ROWS*lh)+'px)';
 
-      // The bezier is chosen so the brake starts at exactly the speed the
-      // linear move ended at, or the reel visibly lurches faster the instant
-      // it is supposed to begin slowing down. The linear move runs at 30 rows
-      // a second; the settle covers 20 rows in 1s, so its own reference speed
-      // is 20 rows a second and it has to start at 1.5x that. The opening
-      // slope of a cubic-bezier is y1/x1, and .6/.4 is 1.5. y2 just past 1
-      // carries it a fraction of a row beyond the stop and back.
-      //
       // Fired 30ms late on purpose. Landing early means the first transition
       // has not finished, and retargeting mid-flight snaps the tape to
       // wherever it had got to; landing late just means it is parked.
       setTimeout(function(){
-        tape.style.transition='transform '+SETTLE+'ms cubic-bezier(.4,.6,.7,1.03)';
+        tape.style.transition='transform '+SETTLE+'ms '+BRAKE;
         tape.style.transform='translateY(-'+(stop*lh)+'px)';
       },FAST+30);
 
@@ -1724,13 +1725,28 @@ section[data-tone]{
     // to be read from the DOM rather than from the array it just replaced.
     function live_before(i){ return reels[i].textContent.trim(); }
 
-    // All six move together, and the cycle is spin plus hold. The first one
-    // waits out a hold so the shelf is readable before anything moves.
-    function round(){ if(!document.hidden) reels.forEach(function(_,i){ spin(i); }); }
-    setTimeout(function(){
-      round();
-      setInterval(round, FAST+SETTLE+HOLD);
-    }, HOLD);
+    // Not one block and not a even ladder: the reels go in clusters, a few
+    // together and the next lot a breath behind. Six starting on the same
+    // frame reads as the shelf glitching; six evenly spaced reads as a queue
+    // being served. Clusters read as a room where several things happen to be
+    // happening at once, which is the only one of the three that looks
+    // unplanned. The offsets are in milliseconds and deliberately small -- big
+    // enough to break the single edge, too small to scan as a sequence.
+    //
+    // Paired against the shelf, not against DOM order: the cards alternate
+    // sides going down, so 0 and 1 are diagonal neighbours rather than a
+    // stack, and no cluster lands as a column.
+    var OFFSET=[0,0,170,170,170,340];
+    var CYCLE=FAST+30+SETTLE+HOLD;
+    reels.forEach(function(_,i){
+      // One hold before the first spin, so the shelf is readable before
+      // anything on it moves.
+      setTimeout(function(){
+        function go(){ if(!document.hidden) spin(i); }
+        go();
+        setInterval(go, CYCLE);
+      }, HOLD+OFFSET[i % OFFSET.length]);
+    });
   }
 
   // ---------- scroll reveal ----------
