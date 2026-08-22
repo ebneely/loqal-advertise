@@ -24,7 +24,7 @@ The form does not post anywhere. It opens **WhatsApp** to `01559959890` with eve
 ## Decisions worth not undoing
 
 - **Arabic is written, not translated.** The English is the mirror, not the source.
-- **The wordmark stretches** on hover: لوكـــال pulls out to لوكــــــــــال. It animates the character *count*, because splitting the word into spans to scale one breaks Arabic letter-joining and the word falls into pieces.
+- **The wordmark stretches** on hover: LOQAAAL pulls the three A's apart and lets them recoil past the mark before settling. Now that the wordmark is Latin in both languages this is plain `letter-spacing` on a span, which the Arabic لوكال could never take — splitting a joined word into spans breaks the letter-joining and the word falls into pieces. It widens into the empty middle of the header bar, so nothing beside it moves.
 - **مجانا carries no tanween.** At display size the `ً` sits over the ج and the word reads as مخانا.
 - **Single light theme, painted explicitly.** The page gets printed and scanned in daylight; a viewer's dark mode was turning it into a different brand.
 - **Smooth scrolling is opt-in from JS.** Left on in CSS, a script error would pin the wrapper and make the whole document unscrollable.
