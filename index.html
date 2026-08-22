@@ -1632,15 +1632,27 @@ section[data-tone]{
 
   var reels=[].slice.call(document.querySelectorAll('.shelf .reel'));
   if(reels.length && !reduced){
-    var SPIN=820, EVERY=2000;
+    // Four seconds of spin, then three of standing still. The spin is two
+    // moves, not one: a real reel does not ease from a standstill, it is
+    // already at speed and brakes at the end. So three seconds run dead linear
+    // and the last one decelerates onto the landing name. A single eased
+    // transition over four seconds crawls at both ends and reads as a list
+    // scrolling rather than a wheel spinning.
+    var FAST=3000, SETTLE=1000, HOLD=3000;
+    // Rows travelled in each move. FAST_ROWS over FAST ms sets the speed --
+    // thirty rows a second, fast enough to blur, slow enough that a name is
+    // still occasionally legible on the way past, which is what sells it as
+    // real names rather than a texture.
+    var FAST_ROWS=90, SETTLE_ROWS=20;
+
     // What each reel is showing right now, so no two cards can land on the
     // same shop -- two identical names on one shelf reads as a bug.
     var live=reels.map(function(r){ return r.textContent.trim(); });
 
+    function any(){ return BRANDS[Math.floor(Math.random()*BRANDS.length)]; }
     function pick(){
       var b;
-      do { b=BRANDS[Math.floor(Math.random()*BRANDS.length)]; }
-      while(live.indexOf(b)!==-1);
+      do { b=any(); } while(live.indexOf(b)!==-1);
       return b;
     }
     function row(name){
@@ -1652,51 +1664,73 @@ section[data-tone]{
     function spin(i){
       var tape=reels[i].firstElementChild;
       var target=pick();
+      // Claimed before the next reel picks, so six simultaneous spins cannot
+      // choose the same shop as each other.
+      live[i]=target;
+
       // Starts on what is already showing so the first frame does not jump.
       // The trailing filler exists only to be seen during the overshoot: the
       // easing carries the tape past its stop, and without a row underneath
       // the target the reel would flash empty at the very moment it settles.
-      var names=[live[i]];
-      for(var k=0;k<7;k++) names.push(BRANDS[Math.floor(Math.random()*BRANDS.length)]);
-      names.push(target);
-      names.push(BRANDS[Math.floor(Math.random()*BRANDS.length)]);
+      var stop=FAST_ROWS+SETTLE_ROWS;
+      var names=[live_before(i)];
+      for(var k=0;k<stop-1;k++) names.push(any());
+      names.push(target);   // index === stop
+      names.push(any());
 
       tape.textContent='';
       names.forEach(function(n){ tape.appendChild(row(n)); });
 
       // Fractional height, not offsetHeight. A row is 1.15em of .72rem, about
-      // 13.25px, and offsetHeight rounds that to 13 -- multiplied across nine
-      // rows the reel settles two pixels high and shows a sliver of the name
-      // underneath, which is exactly the failure the whole effect trades on
-      // not having.
+      // 13.25px, and offsetHeight rounds that to 13 -- multiplied across a
+      // hundred and ten rows the reel settles more than a row high and lands
+      // on the wrong name entirely.
       var lh=tape.firstElementChild.getBoundingClientRect().height;
       tape.style.transition='none';
       tape.style.transform='translateY(0)';
       void tape.offsetHeight;     // forces the reflow the transition starts from
-      tape.style.transition='transform '+SPIN+'ms cubic-bezier(.18,.9,.22,1.06)';
-      tape.style.transform='translateY(-'+((names.length-2)*lh)+'px)';
-      live[i]=target;
+
+      tape.style.transition='transform '+FAST+'ms linear';
+      tape.style.transform='translateY(-'+(FAST_ROWS*lh)+'px)';
+
+      // The bezier is chosen so the brake starts at exactly the speed the
+      // linear move ended at, or the reel visibly lurches faster the instant
+      // it is supposed to begin slowing down. The linear move runs at 30 rows
+      // a second; the settle covers 20 rows in 1s, so its own reference speed
+      // is 20 rows a second and it has to start at 1.5x that. The opening
+      // slope of a cubic-bezier is y1/x1, and .6/.4 is 1.5. y2 just past 1
+      // carries it a fraction of a row beyond the stop and back.
+      //
+      // Fired 30ms late on purpose. Landing early means the first transition
+      // has not finished, and retargeting mid-flight snaps the tape to
+      // wherever it had got to; landing late just means it is parked.
+      setTimeout(function(){
+        tape.style.transition='transform '+SETTLE+'ms cubic-bezier(.4,.6,.7,1.03)';
+        tape.style.transform='translateY(-'+(stop*lh)+'px)';
+      },FAST+30);
 
       // Collapse back to a single row once it has landed: the tape is rebuilt
-      // from scratch every spin, so leaving ten rows in the DOM buys nothing.
+      // from scratch every spin, so leaving a hundred rows in the DOM buys
+      // nothing and six of them is a real amount of markup to carry idle.
       setTimeout(function(){
         tape.style.transition='none';
         tape.style.transform='translateY(0)';
         tape.textContent='';
         tape.appendChild(row(target));
-      },SPIN+60);
+      },FAST+30+SETTLE+60);
     }
 
-    // Each card changes every two seconds, but they are dealt across that
-    // window rather than fired together -- six reels moving on the same frame
-    // reads as the whole shelf glitching.
-    reels.forEach(function(_,i){
-      setTimeout(function(){
-        setInterval(function(){
-          if(!document.hidden) spin(i);   // a background tab spins nothing
-        },EVERY);
-      }, i*(EVERY/reels.length));
-    });
+    // spin() overwrites live[i] before building the tape, so the first row has
+    // to be read from the DOM rather than from the array it just replaced.
+    function live_before(i){ return reels[i].textContent.trim(); }
+
+    // All six move together, and the cycle is spin plus hold. The first one
+    // waits out a hold so the shelf is readable before anything moves.
+    function round(){ if(!document.hidden) reels.forEach(function(_,i){ spin(i); }); }
+    setTimeout(function(){
+      round();
+      setInterval(round, FAST+SETTLE+HOLD);
+    }, HOLD);
   }
 
   // ---------- scroll reveal ----------
