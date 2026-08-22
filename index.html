@@ -564,6 +564,13 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   .cord{display:none}
   .ticket{padding-block-start:clamp(1.5rem,6vw,2.5rem)}
   .tag{inset-block-start:clamp(1.5rem,6vw,2.5rem)}
+  /* With the cord gone the tag has no strand to give it scale, so at phone
+     widths it reads as a slab laid over the card rather than a ticket hung
+     across it. Shrinks only below ~700px: the ceilings hold the tablet size. */
+  .ticket{--tagw:clamp(52px,11vw,76px)}
+  .tag{height:clamp(150px,32vw,230px)}
+  .tag span{font-size:clamp(1.05rem,2.6vw,1.5rem)}
+  .tag::after{inset-block-start:10px;width:8px;height:8px}
 }
 
 .offer h2{
