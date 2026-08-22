@@ -460,6 +460,22 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 .card .ico svg{width:20px;height:20px;stroke:var(--ink);fill:none;stroke-width:1.4}
 .card .txt{display:grid;gap:.1rem;min-width:0}
 .card b{font-size:.86rem;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* The brand line is a reel. It rolls through other shop names and decelerates
+   onto one, the way a price wheel lands -- the garment above it never changes,
+   so a card reads as "this thing, from any of these shops" rather than as one
+   fixed product. Whole names move as blocks: at .72rem a per-letter effect is
+   flicker, not mechanism.
+
+   The row height is stated twice, on the window and on every row, because the
+   transform is measured in whole rows -- if the two ever disagree the reel
+   settles between two names. .shelf is display:none under 1000px, so none of
+   this runs on the phone the page is mostly read on. */
+.card .reel{display:block;overflow:hidden;height:1.15em;line-height:1.15}
+.card .reel .tape{display:block;will-change:transform}
+.card .reel .tape span{
+  display:block;height:1.15em;line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
 .card small{font-size:.72rem;color:var(--ink-2);font-weight:600}
 .card .price{
   margin-inline-start:auto;font-size:.82rem;font-weight:800;
@@ -801,7 +817,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3 3.5 5.5 5.5 10 7 9.4V21h10V9.4l1.5.6 2-4.5L15 3l-3 3.2z"/><path d="M12 6.2V21"/></svg></span>
         <span class="txt">
           <b><span data-ar>قميص كتان</span><span data-en>Linen shirt</span></b>
-          <small dir="ltr">Versattire</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>Versattire</span></span></small>
         </span>
         <span class="price"><span data-ar>450 ج.م</span><span data-en>EGP 450</span></span>
       </article>
@@ -809,7 +825,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M8.5 3 3 6l2 4.2L7 9.4V21h10V9.4l2 .8 2-4.2L15.5 3z"/><path d="M8.5 3q3.5 3.2 7 0"/></svg></span>
         <span class="txt">
           <b><span data-ar>تيشيرت أوفرسايز</span><span data-en>Oversized tee</span></b>
-          <small dir="ltr">Dryp</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>Dryp</span></span></small>
         </span>
         <span class="price"><span data-ar>390 ج.م</span><span data-en>EGP 390</span></span>
       </article>
@@ -817,7 +833,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M8.5 4.5 3 7.5l2 4.2L7 11V21h10V11l2 .7 2-4.2-5.5-3z"/><path d="M9.2 4.7C9.2 2.6 10.3 2 12 2s2.8.6 2.8 2.7"/><path d="M10.4 9v3.2M13.6 9v3.2"/></svg></span>
         <span class="txt">
           <b><span data-ar>هودي</span><span data-en>Hoodie</span></b>
-          <small dir="ltr">Slack</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>Slack</span></span></small>
         </span>
         <span class="price"><span data-ar>780 ج.م</span><span data-en>EGP 780</span></span>
       </article>
@@ -825,7 +841,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3 3.5 5.5 5.5 10 7 9.4V21h10V9.4l1.5.6 2-4.5L15 3l-3 5z"/><path d="M12 8V21"/><path d="M8.5 18.5h7"/></svg></span>
         <span class="txt">
           <b><span data-ar>جاكيت</span><span data-en>Jacket</span></b>
-          <small dir="ltr">Denjoe</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>Denjoe</span></span></small>
         </span>
         <span class="price"><span data-ar>650 ج.م</span><span data-en>EGP 650</span></span>
       </article>
@@ -833,7 +849,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M5 3h14l-.5 18h-5L12 9l-1.5 12h-5z"/><path d="M5 7h14"/><path d="M12 7v2"/></svg></span>
         <span class="txt">
           <b><span data-ar>بنطلون جينز</span><span data-en>Denim jeans</span></b>
-          <small dir="ltr">Antikka</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>Antikka</span></span></small>
         </span>
         <span class="price"><span data-ar>1,150 ج.م</span><span data-en>EGP 1,150</span></span>
       </article>
@@ -841,7 +857,7 @@ section[data-tone]{
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3 6.5 4.5 8 9l-4 12h16L16 9l1.5-4.5L15 3l-3 2.5z"/><path d="M8 9h8"/></svg></span>
         <span class="txt">
           <b><span data-ar>فستان</span><span data-en>Dress</span></b>
-          <small dir="ltr">JEN</small>
+          <small class="reel" dir="ltr"><span class="tape"><span>JEN</span></span></small>
         </span>
         <span class="price"><span data-ar>890 ج.م</span><span data-en>EGP 890</span></span>
       </article>
@@ -1190,6 +1206,13 @@ section[data-tone]{
   var root=document.getElementById('root');
   var btnAr=document.getElementById('btn-ar'), btnEn=document.getElementById('btn-en');
   document.getElementById('yr').textContent=new Date().getFullYear();
+
+  // Read once, here, because two blocks further down were already using this
+  // name without anyone declaring it -- which threw, and took the scroll
+  // reveal with it. It failed invisibly: .will-reveal is added by the block
+  // that died, so nothing was ever hidden and the page just stopped animating
+  // in. Declared at the top so every later block sees the same answer.
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function setLang(lang){
     var rtl = lang==='ar';
@@ -1595,6 +1618,86 @@ section[data-tone]{
   buildTrack();
   btnAr.addEventListener('click',buildTrack);
   btnEn.addEventListener('click',buildTrack);
+
+  // ---------- brand reels ----------
+  // Every shop currently on the list. The six names sitting in the markup are
+  // from this same set, so a browser that never runs the reel still shows real
+  // shops rather than placeholders.
+  var BRANDS=['sutra 27','Amgaad','Antikka','Aykoona','Blancka','Blanks And Co','Blurred',
+    'Brkt','Bucks','By Everland','cave','Comfowear','Comma','CTRL','Decked Out','Denjoe',
+    'Diss & Miss','Dryp','Eighties','Evoca','Frenchee',"Gabri's",'Helio','JEN','Juvenile',
+    'Klassico','Leocansa','Locco','Locken','Maison De Chris','Mojo','Mzaco','Nas Trends',
+    'ORB','Ordinary Product','Plein De Vie','Psych','Salty','Seemly','Seven Seventy Seven',
+    'Slack','Valerian','Vega','Versattire','Wahm','Yonyo','Zedzee','Zuri'];
+
+  var reels=[].slice.call(document.querySelectorAll('.shelf .reel'));
+  if(reels.length && !reduced){
+    var SPIN=820, EVERY=2000;
+    // What each reel is showing right now, so no two cards can land on the
+    // same shop -- two identical names on one shelf reads as a bug.
+    var live=reels.map(function(r){ return r.textContent.trim(); });
+
+    function pick(){
+      var b;
+      do { b=BRANDS[Math.floor(Math.random()*BRANDS.length)]; }
+      while(live.indexOf(b)!==-1);
+      return b;
+    }
+    function row(name){
+      var s=document.createElement('span');
+      s.textContent=name;   // 'Diss & Miss' and "Gabri's" go in as text, never markup
+      return s;
+    }
+
+    function spin(i){
+      var tape=reels[i].firstElementChild;
+      var target=pick();
+      // Starts on what is already showing so the first frame does not jump.
+      // The trailing filler exists only to be seen during the overshoot: the
+      // easing carries the tape past its stop, and without a row underneath
+      // the target the reel would flash empty at the very moment it settles.
+      var names=[live[i]];
+      for(var k=0;k<7;k++) names.push(BRANDS[Math.floor(Math.random()*BRANDS.length)]);
+      names.push(target);
+      names.push(BRANDS[Math.floor(Math.random()*BRANDS.length)]);
+
+      tape.textContent='';
+      names.forEach(function(n){ tape.appendChild(row(n)); });
+
+      // Fractional height, not offsetHeight. A row is 1.15em of .72rem, about
+      // 13.25px, and offsetHeight rounds that to 13 -- multiplied across nine
+      // rows the reel settles two pixels high and shows a sliver of the name
+      // underneath, which is exactly the failure the whole effect trades on
+      // not having.
+      var lh=tape.firstElementChild.getBoundingClientRect().height;
+      tape.style.transition='none';
+      tape.style.transform='translateY(0)';
+      void tape.offsetHeight;     // forces the reflow the transition starts from
+      tape.style.transition='transform '+SPIN+'ms cubic-bezier(.18,.9,.22,1.06)';
+      tape.style.transform='translateY(-'+((names.length-2)*lh)+'px)';
+      live[i]=target;
+
+      // Collapse back to a single row once it has landed: the tape is rebuilt
+      // from scratch every spin, so leaving ten rows in the DOM buys nothing.
+      setTimeout(function(){
+        tape.style.transition='none';
+        tape.style.transform='translateY(0)';
+        tape.textContent='';
+        tape.appendChild(row(target));
+      },SPIN+60);
+    }
+
+    // Each card changes every two seconds, but they are dealt across that
+    // window rather than fired together -- six reels moving on the same frame
+    // reads as the whole shelf glitching.
+    reels.forEach(function(_,i){
+      setTimeout(function(){
+        setInterval(function(){
+          if(!document.hidden) spin(i);   // a background tab spins nothing
+        },EVERY);
+      }, i*(EVERY/reels.length));
+    });
+  }
 
   // ---------- scroll reveal ----------
   if(!reduced && window.IntersectionObserver){
