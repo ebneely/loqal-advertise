@@ -344,6 +344,31 @@ form{display:grid;gap:1.15rem}
 .linkish:hover{color:var(--ink);border-block-end-color:var(--ink)}
 #fallback[hidden]{display:none}
 
+/* The submit button carries both labels and shows one. Swapping textContent
+   would throw away the data-ar/data-en spans the language toggle relies on,
+   and the button would be stuck in whichever language it was sent in. */
+#send .lbl-busy{display:none}
+#send[data-busy="true"] .lbl-idle{display:none}
+#send[data-busy="true"] .lbl-busy{display:inline}
+#send[disabled]{opacity:.6;cursor:progress}
+#send[disabled]:hover{background:var(--ink);color:var(--paper)}
+#send[disabled]:hover .arw{transform:none}
+#root[dir="rtl"] #send[disabled]:hover .arw{transform:scaleX(-1)}
+
+/* Outcome panels: the confirmation, and the failure that carries WhatsApp. */
+.notice{
+  display:grid;gap:.75rem;justify-items:start;
+  border:1px solid var(--line);border-inline-start:3px solid var(--ink);
+  background:var(--field);padding:1.15rem 1.25rem;
+}
+.notice[hidden]{display:none}
+.notice h3{font-size:1.25rem;font-weight:800;margin:0;letter-spacing:-.01em}
+.notice p{margin:0}
+.notice .hint{margin:0;max-width:52ch}
+.notice-bad{border-inline-start-color:var(--signal)}
+.notice-bad p{color:var(--signal);font-weight:600;font-size:.95rem;max-width:52ch}
+.notice.fade{animation:rise .45s var(--ease) both}
+
 /* ---------- contact / qr ---------- */
 .contact-grid{display:grid;gap:clamp(2rem,5vw,4.5rem)}
 @media(min-width:880px){.contact-grid{grid-template-columns:1.2fr .8fr;align-items:start}}
@@ -1085,11 +1110,12 @@ section[data-tone]{
             <span data-ar>انضم لوكال</span><span data-en>Apply to join</span>
           </h2>
           <p class="hint">
-            <span data-ar>املأ البيانات واضغط إرسال — هيفتحلك واتساب برسالة جاهزة فيها كل اللي كتبته، وإنت تبعتها. مش محتاج تكتبها تاني.</span>
-            <span data-en>Fill this in and press send — WhatsApp opens with everything you typed already written out. You just hit send.</span>
+            <span data-ar>املأ البيانات واضغط إرسال. الطلب بيوصلنا على طول، وإحنا نكلمك على الرقم اللي كتبته. لو حصلت أي مشكلة، هنديك لينك واتساب تبعتلنا عليه.</span>
+            <span data-en>Fill this in and press send. The application reaches us straight away and we call you on the number you leave. If anything goes wrong, we hand you a WhatsApp link instead.</span>
           </p>
         </div>
 
+        <div class="form-col">
         <form id="apply" novalidate>
           <div class="row two">
             <div class="f" id="f-shop">
@@ -1131,6 +1157,11 @@ section[data-tone]{
             <span class="err" data-msg-ar="اكتب المنطقة على الأقل" data-msg-en="Enter at least the area"></span>
           </div>
 
+          <div class="f">
+            <label for="email"><span data-ar>الإيميل</span><span data-en>Email</span></label>
+            <input id="email" name="email" type="email" dir="ltr" placeholder="name@example.com" autocomplete="email" />
+          </div>
+
           <div class="row two">
             <div class="f">
               <label for="branches"><span data-ar>عدد الفروع</span><span data-en>Number of branches</span></label>
@@ -1148,17 +1179,60 @@ section[data-tone]{
           </div>
 
           <div class="send">
-            <a class="btn" id="send" href="https://wa.me/201559959890" target="_blank" rel="noopener">
+            <button type="submit" class="btn" id="send">
+              <span class="lbl-idle"><span data-ar>ابعت الطلب</span><span data-en>Send application</span></span>
+              <span class="lbl-busy"><span data-ar>بنبعت…</span><span data-en>Sending…</span></span>
+              <span class="arw" aria-hidden="true">→</span>
+            </button>
+            <button type="button" class="linkish" id="reveal">
+              <span data-ar>تحب تبعت على واتساب بدل كده؟ انسخ الرسالة</span>
+              <span data-en>Rather send it on WhatsApp? Copy the message</span>
+            </button>
+          </div>
+
+          <!-- Every failure ends with a WhatsApp link. The API going down must
+               never leave a shop with nowhere to go -- that is the whole reason
+               the WhatsApp path is kept rather than deleted. -->
+          <div class="notice notice-bad" id="status" role="alert" hidden>
+            <p id="msg-fail" hidden>
+              <span data-ar>حصلت مشكلة وإحنا بنبعت الطلب. جرّب تاني، أو ابعتلنا البيانات على واتساب على طول.</span>
+              <span data-en>Something went wrong while sending. Try again, or send us the details straight on WhatsApp.</span>
+            </p>
+            <p id="msg-rate" hidden>
+              <span data-ar>بعتّ طلبات كتير في وقت قصير. استنى شوية وجرّب تاني، أو ابعتلنا على واتساب دلوقتي.</span>
+              <span data-en>That is a lot of applications in a short time. Wait a little and try again, or message us on WhatsApp now.</span>
+            </p>
+            <p id="msg-bad" hidden>
+              <span data-ar>فيه بيانات ناقصة أو مكتوبة غلط. راجع رقم الموبايل والإيميل وجرّب تاني.</span>
+              <span data-en>Some of the details are missing or not right. Check the mobile number and the email, then try again.</span>
+            </p>
+            <a class="btn" id="wa-fallback" href="https://wa.me/201559959890" target="_blank" rel="noopener">
               <span data-ar>ابعت على واتساب</span><span data-en>Send on WhatsApp</span>
               <span class="arw" aria-hidden="true">→</span>
             </a>
-            <button type="button" class="linkish" id="reveal">
-              <span data-ar>مفتحش معاك؟ انسخ الرسالة</span>
-              <span data-en>Didn't open? Copy the message</span>
-            </button>
           </div>
+
           <div id="fallback" hidden></div>
         </form>
+
+        <!-- Replaces the form once the API has the application. It says what
+             happens next, because "sent" on its own tells a shopkeeper nothing
+             about whether to wait or to chase us. -->
+        <div class="notice" id="sent" role="status" hidden>
+          <h3>
+            <span data-ar>تمام، وصلنا طلبك</span>
+            <span data-en>Got it — your application is in</span>
+          </h3>
+          <p class="hint">
+            <span data-ar>هنراجع بيانات المحل ونكلمك على الرقم اللي كتبته خلال يومين شغل. مش محتاج تبعت تاني. لو مستعجل، كلّمنا على واتساب.</span>
+            <span data-en>We will look over your shop's details and call you on the number you left within two working days. No need to send it again. If you are in a hurry, message us on WhatsApp.</span>
+          </p>
+          <a class="btn" href="https://wa.me/201559959890" target="_blank" rel="noopener">
+            <span data-ar>واتساب</span><span data-en>WhatsApp</span>
+            <span class="arw" aria-hidden="true">→</span>
+          </a>
+        </div>
+        </div>
       </div>
     </div>
   </section>
@@ -1247,7 +1321,19 @@ section[data-tone]{
   var send=document.getElementById('send');
   var reveal=document.getElementById('reveal');
   var fallback=document.getElementById('fallback');
+  var statusBox=document.getElementById('status');
+  var sentBox=document.getElementById('sent');
+  var waFallback=document.getElementById('wa-fallback');
   var PHONE='201559959890';
+  // Where the application is recorded. The one line to change when the API
+  // moves: this file is served as a flat static page with no build step, so
+  // there is nowhere else to put an environment variable.
+  //
+  // A wrong or unreachable origin is not fatal by design -- the fetch fails,
+  // the failure panel appears, and the shop sends the same details over
+  // WhatsApp. That is the worst case, and it is the behaviour this page had
+  // before the endpoint existed at all.
+  var API='http://localhost:3001';
 
   function isPhone(v){ return /^01[0-9]{9}$/.test(v.replace(/[\s-]/g,'')); }
   function v(id){ return (document.getElementById(id).value||'').trim(); }
@@ -1269,27 +1355,28 @@ section[data-tone]{
     var ar = root.dir==='rtl';
     var L = ar
       ? {t:'طلب انضمام للوكال',shop:'المحل',owner:'المسؤول',phone:'الموبايل',kind:'المنتجات',
-         addr:'العنوان',br:'الفروع',soc:'الصفحة',note:'ملاحظات'}
+         addr:'العنوان',mail:'الإيميل',br:'الفروع',soc:'الصفحة',note:'ملاحظات'}
       : {t:'Loqal join request',shop:'Shop',owner:'Contact',phone:'Mobile',kind:'Sells',
-         addr:'Address',br:'Branches',soc:'Page',note:'Notes'};
+         addr:'Address',mail:'Email',br:'Branches',soc:'Page',note:'Notes'};
     var lines=[L.t,'',
       L.shop+': '+v('shop'),
       L.owner+': '+v('owner'),
       L.phone+': '+v('phone'),
       L.kind+': '+kindText,
       L.addr+': '+v('address')];
+    if(v('email'))    lines.push(L.mail+': '+v('email'));
     if(v('branches')) lines.push(L.br+': '+v('branches'));
     if(v('social'))   lines.push(L.soc+': '+v('social'));
     if(v('note'))     lines.push('', L.note+': '+v('note'));
     return lines.join(String.fromCharCode(10));
   }
 
-  // The href is rebuilt on every keystroke, so clicking the button is an
-  // ordinary link navigation carrying a real user gesture. window.open() was
-  // the previous approach and sandboxed viewers block it outright, which is
-  // why every shopkeeper hit the copy-paste fallback instead of WhatsApp.
+  // The fallback link's href is rebuilt on every keystroke, so clicking it is
+  // an ordinary link navigation carrying a real user gesture. window.open()
+  // was the previous approach and sandboxed viewers block it outright, which
+  // is why every shopkeeper hit the copy-paste fallback instead of WhatsApp.
   function refresh(){
-    send.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(message());
+    waFallback.href='https://wa.me/'+PHONE+'?text='+encodeURIComponent(message());
   }
 
   function invalidFields(){
@@ -1297,19 +1384,86 @@ section[data-tone]{
             ['f-address',!v('address')],['f-kind',!v('kind')]];
   }
 
-  send.addEventListener('click',function(e){
+  // The endpoint's schema is .strict(): an unknown key is a 400, and so is an
+  // empty string where the schema wants a number or an email. So optional
+  // fields are omitted rather than sent blank, and every key here is spelled
+  // exactly as submit-application.contract.ts spells it.
+  function payload(){
+    var body={
+      businessName: v('shop'),
+      ownerName:    v('owner'),
+      phone:        v('phone').replace(/[\s-]/g,''),
+      address:      v('address')
+    };
+    if(v('email'))  body.email=v('email');
+    if(v('kind'))   body.category=v('kind');
+    if(v('social')) body.social=v('social');
+    if(v('note'))   body.note=v('note');
+    // A number or nothing. '' is rejected by z.coerce.number(), and NaN would
+    // serialise to null, which the schema rejects just as firmly.
+    var branches=v('branches').replace(/[\s,]/g,'');
+    if(/^[0-9]+$/.test(branches)) body.branchCount=parseInt(branches,10);
+    return body;
+  }
+
+  function showStatus(which){
+    ['msg-fail','msg-rate','msg-bad'].forEach(function(id){
+      document.getElementById(id).hidden = (id!==which);
+    });
+    refresh();               // the WhatsApp text must match what is on screen
+    statusBox.hidden=false;
+    statusBox.classList.remove('fade');
+    if(!reduced){ void statusBox.offsetWidth; statusBox.classList.add('fade'); }
+    statusBox.scrollIntoView({block:'nearest'});
+  }
+
+  function busy(on){
+    send.disabled=on;
+    send.setAttribute('data-busy', on?'true':'false');
+    send.setAttribute('aria-busy', on?'true':'false');
+  }
+
+  var sending=false;
+
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(sending) return;
+
     var checks=invalidFields(), bad=false;
     checks.forEach(function(c){ if(c[1]) bad=true; mark(c[0],c[1]); });
     if(bad){
-      e.preventDefault();
       var first=form.querySelector('[data-invalid="true"] input, [data-invalid="true"] select');
       if(first) first.focus();
       return;
     }
-    refresh(); // guarantee the href matches what is on screen right now
-  });
 
-  form.addEventListener('submit',function(e){ e.preventDefault(); send.click(); });
+    sending=true; busy(true); statusBox.hidden=true;
+
+    fetch(API+'/v1/brand-applications',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload())
+    }).then(function(res){
+      if(res.status===201 || res.ok){
+        // Replaced, not just hidden: a form still on screen after a successful
+        // send is an invitation to send the same shop twice.
+        form.hidden=true;
+        sentBox.hidden=false;
+        if(!reduced) sentBox.classList.add('fade');
+        sentBox.scrollIntoView({block:'nearest'});
+        return;
+      }
+      // 429 gets its own words. "Something went wrong" would send a shop that
+      // did nothing wrong away thinking the page is broken.
+      showStatus(res.status===429 ? 'msg-rate' : (res.status===400 ? 'msg-bad' : 'msg-fail'));
+    }).catch(function(){
+      // Offline, DNS, CORS, the API down -- indistinguishable from here and
+      // answered the same way, because the answer is the WhatsApp link.
+      showStatus('msg-fail');
+    }).then(function(){
+      sending=false; busy(false);
+    });
+  });
 
   form.addEventListener('input',function(e){
     refresh();
