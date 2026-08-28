@@ -21,12 +21,16 @@
   --ink-2:#5C594F;
   --line:#CFCBC0;
   --signal:#C8102E;
+  /* The brand green, from the storefront and the console. The three a's are
+     the only thing on this page that carries it. */
+  --go:#007950;
   --field:#F7F6F3;
 
   --inv-paper:#14130F;
   --inv-ink:#F2F0EA;
   --inv-ink-2:#9C978A;
   --inv-line:#33312A;
+  --inv-go:#4FBF8B;
 
   --ease:cubic-bezier(.16,1,.3,1);
   --pad:clamp(1.25rem,5vw,6rem);
@@ -70,6 +74,7 @@ body{
   --ink-2:var(--inv-ink-2);
   --line:var(--inv-line);
   --field:var(--inv-paper);
+  --go:var(--inv-go);
   background:var(--paper);
   color:var(--ink);
 }
@@ -112,6 +117,7 @@ header{
    letter-spacing:inherit, not a number: the header mark sits at .1em and the
    hero at -.045em, and the span has to start from whichever it is inside. */
 .aaa{
+  color:var(--go);
   display:inline-block;letter-spacing:inherit;
   transition:letter-spacing .5s cubic-bezier(.34,1.56,.64,1);
 }
@@ -668,6 +674,8 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
 html[data-tone="dark"]{
   --paper:#141310;--raise:#1C1A16;--ink:#F3F1EB;--ink-2:#9C978A;
   --line:#35322B;--field:#1C1A16;--signal:#FF5468;
+  /* #007950 is 2.1:1 on this ground. The mark lightens rather than going grey. */
+  --go:var(--inv-go);
 }
 /* Only the surfaces that carry the palette transition. A blanket rule on *
    would drag every hover and focus state to the same slow curve. */
@@ -1097,7 +1105,7 @@ section[data-tone]{
             <path d="M20 400 C 15 300, 8 150, 13 0"/>
             <path d="M20 400 C 25 300, 32 150, 27 0"/>
           </svg>
-          <span>LOQAAAL</span>
+          <span>LOQ<span class="aaa">AAA</span>L</span>
         </div>
     </div>
   </section>
@@ -1266,7 +1274,7 @@ section[data-tone]{
 
 <footer>
   <div class="wrap foot">
-    <span>© <span id="yr"></span> LOQAAAL</span>
+    <span>© <span id="yr"></span> LOQ<span class="aaa">AAA</span>L</span>
     <span data-ar>سوق أونلاين لمحلات الملابس في مصر</span>
     <span data-en>An online marketplace for Egypt's clothing shops</span>
   </div>
