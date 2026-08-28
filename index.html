@@ -1333,7 +1333,12 @@ section[data-tone]{
   // the failure panel appears, and the shop sends the same details over
   // WhatsApp. That is the worst case, and it is the behaviour this page had
   // before the endpoint existed at all.
-  var API='http://localhost:3001';
+  // Includes /api: the NestJS app calls setGlobalPrefix(API_PREFIX) and
+  // API_PREFIX is "api", so /v1/brand-applications is a 404 and
+  // /api/v1/brand-applications is the route. Getting this wrong is not
+  // loud -- a 404 lands in the generic failure branch, the form drops to
+  // WhatsApp, and the page behaves exactly as it did before any of this.
+  var API='http://localhost:3001/api';
 
   function isPhone(v){ return /^01[0-9]{9}$/.test(v.replace(/[\s-]/g,'')); }
   function v(id){ return (document.getElementById(id).value||'').trim(); }
