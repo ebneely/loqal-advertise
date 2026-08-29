@@ -512,6 +512,12 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   margin-inline-start:auto;font-size:.82rem;font-weight:800;
   white-space:nowrap;font-variant-numeric:tabular-nums;
 }
+/* The price spins on the same tape mechanism as the shop name. A shop
+   changing while the price sits still reads as one shelf with a fixed
+   ticket; both moving reads as a different garment from a different
+   shop, which is what the shelf is actually showing. */
+.card .price.reel{flex:none}
+.card .price.reel .tape span{text-align:end}
 
 /* ---------- the offer ----------
    A swing tag over a stack of the same word, the way a shop prints one
@@ -576,10 +582,13 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   padding:clamp(1.1rem,2.4vw,2rem) clamp(1.4rem,3vw,2.6rem);
   box-shadow:0 30px 60px -44px rgba(20,19,15,.6);
 }
+/* line-height under 1 clips the dot UNDER the ج, and مجانا without that dot
+   reads as مخانا at this size — the word has been misread twice. Arabic needs
+   the room; the stack is still tight, just not tight enough to eat a glyph. */
 .ticket .stack{
   display:grid;gap:0;
-  font-weight:800;line-height:.9;letter-spacing:-.04em;
-  font-size:clamp(2.2rem,6.5vw,4.4rem);
+  font-weight:800;line-height:1.12;letter-spacing:-.02em;
+  font-size:clamp(2rem,5.8vw,3.9rem);
 }
 .ticket .stack b{font-weight:inherit}
 .ticket .stack span{display:block;animation:tick 4s var(--ease) infinite alternate}
@@ -852,7 +861,7 @@ section[data-tone]{
           <b><span data-ar>قميص كتان</span><span data-en>Linen shirt</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>Versattire</span></span></small>
         </span>
-        <span class="price"><span data-ar>450 ج.م</span><span data-en>EGP 450</span></span>
+        <span class="price reel" data-band="380,560"><span class="tape"><span><span data-ar>450 ج.م</span><span data-en>EGP 450</span></span></span></span>
       </article>
       <article class="card" style="--x:40%;--y:20%;--r:3deg;--d:.14s;--dur:4.1s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M8.5 3 3 6l2 4.2L7 9.4V21h10V9.4l2 .8 2-4.2L15.5 3z"/><path d="M8.5 3q3.5 3.2 7 0"/></svg></span>
@@ -860,7 +869,7 @@ section[data-tone]{
           <b><span data-ar>تيشيرت أوفرسايز</span><span data-en>Oversized tee</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>Dryp</span></span></small>
         </span>
-        <span class="price"><span data-ar>390 ج.م</span><span data-en>EGP 390</span></span>
+        <span class="price reel" data-band="290,470"><span class="tape"><span><span data-ar>390 ج.م</span><span data-en>EGP 390</span></span></span></span>
       </article>
       <article class="card" style="--x:8%;--y:36%;--r:2.5deg;--d:.28s;--dur:3.6s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M8.5 4.5 3 7.5l2 4.2L7 11V21h10V11l2 .7 2-4.2-5.5-3z"/><path d="M9.2 4.7C9.2 2.6 10.3 2 12 2s2.8.6 2.8 2.7"/><path d="M10.4 9v3.2M13.6 9v3.2"/></svg></span>
@@ -868,7 +877,7 @@ section[data-tone]{
           <b><span data-ar>هودي</span><span data-en>Hoodie</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>Slack</span></span></small>
         </span>
-        <span class="price"><span data-ar>780 ج.م</span><span data-en>EGP 780</span></span>
+        <span class="price reel" data-band="620,920"><span class="tape"><span><span data-ar>780 ج.م</span><span data-en>EGP 780</span></span></span></span>
       </article>
       <article class="card" style="--x:46%;--y:47%;--r:-3deg;--d:.42s;--dur:4.6s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3 3.5 5.5 5.5 10 7 9.4V21h10V9.4l1.5.6 2-4.5L15 3l-3 5z"/><path d="M12 8V21"/><path d="M8.5 18.5h7"/></svg></span>
@@ -876,7 +885,7 @@ section[data-tone]{
           <b><span data-ar>جاكيت</span><span data-en>Jacket</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>Denjoe</span></span></small>
         </span>
-        <span class="price"><span data-ar>650 ج.م</span><span data-en>EGP 650</span></span>
+        <span class="price reel" data-band="550,880"><span class="tape"><span><span data-ar>650 ج.م</span><span data-en>EGP 650</span></span></span></span>
       </article>
       <article class="card" style="--x:2%;--y:62%;--r:-2deg;--d:.56s;--dur:3.9s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M5 3h14l-.5 18h-5L12 9l-1.5 12h-5z"/><path d="M5 7h14"/><path d="M12 7v2"/></svg></span>
@@ -884,7 +893,7 @@ section[data-tone]{
           <b><span data-ar>بنطلون جينز</span><span data-en>Denim jeans</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>Antikka</span></span></small>
         </span>
-        <span class="price"><span data-ar>1,150 ج.م</span><span data-en>EGP 1,150</span></span>
+        <span class="price reel" data-band="850,1350"><span class="tape"><span><span data-ar>1,150 ج.م</span><span data-en>EGP 1,150</span></span></span></span>
       </article>
       <article class="card" style="--x:42%;--y:73%;--r:4deg;--d:.7s;--dur:5s">
         <span class="ico"><svg viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round"><path d="M9 3 6.5 4.5 8 9l-4 12h16L16 9l1.5-4.5L15 3l-3 2.5z"/><path d="M8 9h8"/></svg></span>
@@ -892,7 +901,7 @@ section[data-tone]{
           <b><span data-ar>فستان</span><span data-en>Dress</span></b>
           <small class="reel" dir="ltr"><span class="tape"><span>JEN</span></span></small>
         </span>
-        <span class="price"><span data-ar>890 ج.م</span><span data-en>EGP 890</span></span>
+        <span class="price reel" data-band="700,1100"><span class="tape"><span><span data-ar>890 ج.م</span><span data-en>EGP 890</span></span></span></span>
       </article>
     </div>
     <div class="wrap">
@@ -1809,12 +1818,12 @@ section[data-tone]{
     // FAST + the 30ms handoff + SETTLE is the three seconds, which is why
     // FAST is not a round number: the handoff has to come out of the budget
     // rather than be added on top of it.
-    var FAST=2170, SETTLE=800, HOLD=3000;
+    var FAST=1880, SETTLE=1220, HOLD=3000;
     // Rows travelled in each move. FAST_ROWS over FAST ms sets the speed --
     // thirty rows a second, fast enough to blur, slow enough that a name is
     // still occasionally legible on the way past, which is what sells it as
     // real names rather than a texture.
-    var FAST_ROWS=65, SETTLE_ROWS=16;
+    var FAST_ROWS=54, SETTLE_ROWS=24;
 
     // The brake has to open at exactly the speed the linear move ends at, or
     // the reel lurches faster at the moment it is meant to start slowing. A
@@ -1823,43 +1832,91 @@ section[data-tone]{
     // the curve follows instead of quietly going out of step. y2 just past 1
     // carries the tape a fraction of a row beyond the stop and back.
     var OPEN = (FAST_ROWS/(FAST/1000)) / (SETTLE_ROWS/(SETTLE/1000));
-    var BRAKE = 'cubic-bezier(.4,'+(OPEN*0.4).toFixed(3)+',.7,1.03)';
+    var BRAKE = 'cubic-bezier(.4,'+(OPEN*0.4).toFixed(3)+',.62,1.012)';
 
-    // What each reel is showing right now, so no two cards can land on the
-    // same shop -- two identical names on one shelf reads as a bug.
-    var live=reels.map(function(r){ return r.textContent.trim(); });
+    // Two kinds of reel share one mechanism. A reel with data-band is a price;
+    // everything else is a shop. querySelectorAll returns them in DOM order,
+    // and .txt precedes .price inside every card, so reel 2c is card c's shop
+    // and 2c+1 is its price -- which is what lets the pair spin as one card.
+    function band(i){
+      var b=reels[i].getAttribute('data-band');
+      return b ? b.split(',').map(Number) : null;
+    }
+
+    // Rounded to the nearest ten. A shelf of prices ending in 7 and 3 reads as
+    // generated; real tickets are round.
+    function priceIn(b){
+      return Math.round((b[0]+Math.random()*(b[1]-b[0]))/10)*10;
+    }
+
+    // What each reel shows RIGHT NOW. Read from the DOM for shops, parsed out
+    // of the ticket for prices -- textContent on a price row would return the
+    // Arabic and the English concatenated, since one of the pair is only
+    // hidden, not absent.
+    var cur=reels.map(function(r,i){
+      var b=band(i);
+      if(!b) return r.textContent.trim();
+      var ar=r.querySelector('[data-ar]');
+      return parseInt((ar?ar.textContent:'').replace(/[^\d]/g,''),10) || b[0];
+    });
 
     function any(){ return BRANDS[Math.floor(Math.random()*BRANDS.length)]; }
-    function pick(){
-      var b;
-      do { b=any(); } while(live.indexOf(b)!==-1);
-      return b;
+
+    // Uniqueness is a shop rule only. Two cards landing on the same price is
+    // ordinary; two landing on the same shop reads as a bug.
+    function pick(i){
+      var b=band(i);
+      if(b) return priceIn(b);
+      var s;
+      do { s=any(); } while(cur.indexOf(s)!==-1);
+      return s;
     }
-    function row(name){
+
+    function row(i,val){
       var s=document.createElement('span');
-      s.textContent=name;   // 'Diss & Miss' and "Gabri's" go in as text, never markup
+      if(!band(i)){
+        s.textContent=val;  // 'Diss & Miss' and "Gabri's" go in as text, never markup
+        return s;
+      }
+      // A price carries both languages the way the static markup did, so the
+      // language toggle keeps working on a row this script invented.
+      var n=val.toLocaleString('en-US');
+      var ar=document.createElement('span'); ar.setAttribute('data-ar','');
+      ar.textContent=n+' ج.م';
+      var en=document.createElement('span'); en.setAttribute('data-en','');
+      en.textContent='EGP '+n;
+      s.appendChild(ar); s.appendChild(en);
       return s;
     }
 
     function spin(i){
       var tape=reels[i].firstElementChild;
-      var target=pick();
+      // Read before the claim below overwrites it: the tape has to open on the
+      // value the card is already showing, or the first frame jumps.
+      var was=cur[i];
+      var target=pick(i);
       // Claimed before the next reel picks, so six simultaneous spins cannot
       // choose the same shop as each other.
-      live[i]=target;
+      cur[i]=target;
 
       // Starts on what is already showing so the first frame does not jump.
       // The trailing filler exists only to be seen during the overshoot: the
       // easing carries the tape past its stop, and without a row underneath
       // the target the reel would flash empty at the very moment it settles.
       var stop=FAST_ROWS+SETTLE_ROWS;
-      var names=[live_before(i)];
-      for(var k=0;k<stop-1;k++) names.push(any());
+      var b=band(i);
+      var filler=function(){ return b ? priceIn(b) : any(); };
+      var names=[was];
+      for(var k=0;k<stop-1;k++) names.push(filler());
       names.push(target);   // index === stop
-      names.push(any());
+      // Two, not one. The brake carries the tape past its stop and back, and a
+      // single row underneath is only just enough — on a dropped frame the
+      // overshoot reaches past it and the reel shows a sliver of nothing.
+      names.push(filler());
+      names.push(filler());
 
       tape.textContent='';
-      names.forEach(function(n){ tape.appendChild(row(n)); });
+      names.forEach(function(n){ tape.appendChild(row(i,n)); });
 
       // Fractional height, not offsetHeight. A row is 1.15em of .72rem, about
       // 13.25px, and offsetHeight rounds that to 13 -- multiplied across a
@@ -1883,18 +1940,21 @@ section[data-tone]{
 
       // Collapse back to a single row once it has landed: the tape is rebuilt
       // from scratch every spin, so leaving a hundred rows in the DOM buys
-      // nothing and six of them is a real amount of markup to carry idle.
+      // nothing and twelve of them is a real amount of markup to carry idle.
+      //
+      // Built first, swapped in ONE mutation. Emptying and then appending
+      // leaves a frame where the tape has no rows at all, and on a slow frame
+      // that frame is what you see: the card goes blank for an instant before
+      // the new name lands.
       setTimeout(function(){
+        var landed=row(i,target);
         tape.style.transition='none';
         tape.style.transform='translateY(0)';
-        tape.textContent='';
-        tape.appendChild(row(target));
+        tape.replaceChildren(landed);
       },FAST+30+SETTLE+60);
     }
 
-    // spin() overwrites live[i] before building the tape, so the first row has
-    // to be read from the DOM rather than from the array it just replaced.
-    function live_before(i){ return reels[i].textContent.trim(); }
+    // (spin() captures the outgoing value itself, before it claims the new one.)
 
     // Not one block and not a even ladder: the reels go in clusters, a few
     // together and the next lot a breath behind. Six starting on the same
@@ -1910,13 +1970,17 @@ section[data-tone]{
     var OFFSET=[0,0,170,170,170,340];
     var CYCLE=FAST+30+SETTLE+HOLD;
     reels.forEach(function(_,i){
+      // Indexed by CARD, not by reel. Each card owns two reels now -- its shop
+      // and its price -- and they have to leave and land together, or the card
+      // changes its price half a second after it changed its shop.
+      var card=Math.floor(i/2);
       // One hold before the first spin, so the shelf is readable before
       // anything on it moves.
       setTimeout(function(){
         function go(){ if(!document.hidden) spin(i); }
         go();
         setInterval(go, CYCLE);
-      }, HOLD+OFFSET[i % OFFSET.length]);
+      }, HOLD+OFFSET[card % OFFSET.length]);
     });
   }
 
