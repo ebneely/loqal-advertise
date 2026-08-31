@@ -612,8 +612,12 @@ footer{border-block-start:1px solid var(--line);padding-block:2.5rem}
   box-shadow:0 34px 60px -34px rgba(20,19,15,.75);
   animation:swing 6s ease-in-out infinite alternate;
 }
+/* vertical-rl already runs the letters top to bottom and turns each one a
+   quarter turn, which is what a printed tag does. The rotate(180deg) that used
+   to sit here flipped the whole box on top of that, so the word ran upwards and
+   LOQAAAL read as LAAAQOL. */
 .tag span{
-  writing-mode:vertical-rl;transform:rotate(180deg);
+  writing-mode:vertical-rl;
   font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.06em;
   font-size:clamp(1.5rem,2.7vw,2.3rem);
 }
@@ -1938,20 +1942,22 @@ section[data-tone]{
         tape.style.transform='translateY(-'+(stop*lh)+'px)';
       },FAST+30);
 
-      // Collapse back to a single row once it has landed: the tape is rebuilt
-      // from scratch every spin, so leaving a hundred rows in the DOM buys
-      // nothing and twelve of them is a real amount of markup to carry idle.
+      // There is deliberately NO tidy-up pass here.
       //
-      // Built first, swapped in ONE mutation. Emptying and then appending
-      // leaves a frame where the tape has no rows at all, and on a slow frame
-      // that frame is what you see: the card goes blank for an instant before
-      // the new name lands.
-      setTimeout(function(){
-        var landed=row(i,target);
-        tape.style.transition='none';
-        tape.style.transform='translateY(0)';
-        tape.replaceChildren(landed);
-      },FAST+30+SETTLE+60);
+      // There used to be one: sixty milliseconds after landing it reset the
+      // transform and swapped the tape down to the single row that had won.
+      // It existed to keep idle markup down, and it was the empty gap — the
+      // card is on screen and settled, and that timer reaches in and rewrites
+      // the element underneath it. Reset the transform a frame before the row
+      // lands, or land the row a frame before the transform resets, and the
+      // window shows whatever is at translateY(0) of a tape that is mid-swap.
+      // Ordering the two operations differently only moves which frame it is.
+      //
+      // The work was never needed: spin() rebuilds the tape from nothing every
+      // time, so the rows left standing here are replaced by the next spin
+      // regardless. Parking on the landed row and leaving it alone costs
+      // twelve tapes of idle spans and removes the only moment when a visible
+      // reel is edited.
     }
 
     // (spin() captures the outgoing value itself, before it claims the new one.)
