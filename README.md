@@ -19,7 +19,15 @@ The script rebuilds the matrix from the SVG path it just wrote and refuses to sa
 
 ## What the page does
 
-The form does not post anywhere. It opens **WhatsApp** to `01559959890` with every field already written out as a message — an Egyptian shop owner already lives in WhatsApp, and it means no server, no database and no spam to moderate. If a browser blocks the popup, the message appears in a pre-selected textarea instead of a button that silently did nothing.
+The form posts to the Loqal API — `POST /v1/brand-applications`, the `API`
+constant near the top of the page's script — and every submission becomes a
+`BrandApplication` row an admin reviews in the dashboard. **WhatsApp to
+`01559959890` is the fallback, not the flow**: if the request fails for any
+reason, the same fields open as a pre-written WhatsApp message, so a shop
+owner is never stranded. Two things must both be true in production or every
+application silently takes the fallback: the `API` constant points at the
+deployed backend over **https**, and that backend's `CORS_ORIGINS` includes
+this page's origin.
 
 ## Decisions worth not undoing
 

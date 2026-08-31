@@ -1359,7 +1359,8 @@ section[data-tone]{
   // /api/v1/brand-applications is the route. Getting this wrong is not
   // loud -- a 404 lands in the generic failure branch, the form drops to
   // WhatsApp, and the page behaves exactly as it did before any of this.
-  var API='http://localhost:3001/api';
+  // https, or the browser blocks the call from this https page.
+  var API='https://loqal-backend-snzy7t-f05131-207-180-195-37.sslip.io/api';
 
   function isPhone(v){ return /^01[0-9]{9}$/.test(v.replace(/[\s-]/g,'')); }
   function v(id){ return (document.getElementById(id).value||'').trim(); }
